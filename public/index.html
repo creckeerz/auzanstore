@@ -126,6 +126,25 @@
     &copy; 2025 Auzan Store. Powered by XL / AXIS AKRAB.
   </footer>
 
+<script>
+  function generatePesan(paket) {
+    let pesan = `Halo Admin Auzan Store,%0A` +
+                `Saya ingin beli paket berikut:%0A%0A` +
+                `📦 Nama: ${paket.nama}%0A` +
+                `💰 Harga: Rp ${paket.harga}%0A` +
+                `📄 Detail:%0A`;
+
+    paket.detail.forEach(line => {
+      pesan += `- ${line}%0A`;
+    });
+
+    pesan += `%0AMohon diproses ya.`;
+    return pesan;
+  }
+</script>
+
+
+  
   <script>
     fetch('/api/data')
       .then(res => res.json())
@@ -145,7 +164,9 @@
               <div class="paket-harga">Rp ${paket.harga}</div>
               ${detailHTML}
             </div>
-            <div class="paket-link"><a href="${paket.link}" target="_blank">Beli Sekarang</a></div>
+            <div class="paket-link">
+  <a href="https://wa.me/${encodeURIComponent(paket.link)}?text=${encodeURIComponent(generatePesan(paket))}" target="_blank">Beli Sekarang</a>
+</div>
           `;
 
           container.appendChild(card);
