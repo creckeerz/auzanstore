@@ -10,11 +10,13 @@
       font-family: 'Poppins', sans-serif;
       padding: 20px;
       background: #f4f6f9;
+      margin: 0;
     }
 
     h2 {
       text-align: center;
       color: #2c3e50;
+      margin-bottom: 30px;
     }
 
     .paket-form {
@@ -43,6 +45,7 @@
       border: 1px solid #ccc;
       border-radius: 6px;
       margin-top: 5px;
+      font-size: 14px;
     }
 
     textarea {
@@ -57,7 +60,8 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
-      margin-top: 20px;
+      display: block;
+      margin: 30px auto 0;
     }
 
     button:hover {
@@ -67,6 +71,12 @@
     .note {
       font-size: 12px;
       color: #555;
+    }
+
+    @media (max-width: 600px) {
+      .paket-form h3 {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -82,10 +92,9 @@
   </form>
 
   <script>
-    const boxCount = 8; // jumlah box
+    const boxCount = 8;
     const boxContainer = document.getElementById('boxContainer');
 
-    // Muat form box
     for (let i = 0; i < boxCount; i++) {
       const box = document.createElement('div');
       box.className = 'paket-form';
@@ -106,11 +115,11 @@
       boxContainer.appendChild(box);
     }
 
-    // Simpan ke JSON
     document.getElementById('formPaket').addEventListener('submit', function (e) {
       e.preventDefault();
 
       const data = [];
+
       for (let i = 0; i < boxCount; i++) {
         const nama = document.querySelector(`[name=nama${i}]`).value.trim();
         const harga = document.querySelector(`[name=harga${i}]`).value.trim();
@@ -122,25 +131,27 @@
         }
       }
 
-      const jsonOutput = JSON.stringify(data, null, 2);
-      console.log(jsonOutput); // sementara tampilkan dulu di konsol
+      if (data.length === 0) {
+        alert("Isi minimal 1 paket sebelum menyimpan.");
+        return;
+      }
 
       fetch('https://script.google.com/macros/s/AKfycbz698wTJ7_-BclMcEziWXNaTNUOcxRhTLCAPngcBVzOysRsI1351JgTEstWoxYaMcrz/exec', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
-})
-.then(res => res.text())
-.then(result => {
-  alert(result || 'Berhasil simpan ke Google Sheet');
-})
-.catch(err => {
-  alert('Gagal menyimpan ke Google Sheet');
-  console.error(err);
-});
-
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(result => {
+        alert(result || 'Berhasil simpan ke Google Sheet!');
+      })
+      .catch(err => {
+        alert('❌ Gagal menyimpan ke Google Sheet.');
+        console.error(err);
+      });
+    });
   </script>
 
 </body>
