@@ -3,109 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AUZAN STORE - Paket Internet AKRAB</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <title>AUZAN STORE - Paket Internet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
-      background: linear-gradient(to bottom, #4b6cb7, #182848);
-      color: #fff;
+      padding: 0;
+      background: #f0f4f8;
     }
 
     header {
-      text-align: center;
-      padding: 30px 20px 10px;
-    }
-
-    .logo {
-      font-size: 32px;
-      font-weight: 700;
-    }
-
-    .logo span {
-      color: #ffcc00;
-    }
-
-    .tagline {
-      font-size: 14px;
-      color: #ddd;
-    }
-
-    .packages {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-
-    .card {
-      background: #fff;
-      color: #333;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      transition: 0.3s;
-    }
-
-    .card:hover {
-      transform: scale(1.03);
-    }
-
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 20px;
-      color: #4b6cb7;
-    }
-
-    .price {
-      font-size: 22px;
-      font-weight: bold;
-      color: #27ae60;
-      margin: 8px 0 10px;
-    }
-
-    .card ul {
-      list-style: none;
-      padding-left: 0;
-      font-size: 14px;
-    }
-
-    .card ul li {
-      margin-bottom: 4px;
-    }
-
-    .buy-btn {
-      display: block;
-      margin-top: 12px;
       background: #4b6cb7;
       color: #fff;
-      padding: 10px;
-      text-align: center;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: background 0.3s ease;
-    }
-
-    .buy-btn:hover {
-      background: #355293;
-    }
-
-    footer {
-      text-align: center;
       padding: 20px;
-      font-size: 14px;
-      color: #ccc;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+
+    .paket-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s;
+    }
+
+    .paket-box:hover {
+      transform: translateY(-3px);
+    }
+
+    .paket-box h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    .harga {
+      font-size: 20px;
+      font-weight: bold;
+      color: #27ae60;
+      margin: 5px 0 10px;
+    }
+
+    .detail {
+      margin-bottom: 10px;
+    }
+
+    .detail li {
+      margin-left: 20px;
+      line-height: 1.5;
+    }
+
+    .btn-beli {
+      display: inline-block;
+      background: #4b6cb7;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .btn-beli:hover {
+      background: #3a549d;
     }
 
     @media (max-width: 600px) {
-      .logo {
-        font-size: 26px;
+      .paket-box {
+        padding: 15px;
       }
 
-      .tagline {
-        font-size: 13px;
+      .harga {
+        font-size: 18px;
+      }
+
+      header h1 {
+        font-size: 20px;
       }
     }
   </style>
@@ -113,46 +98,54 @@
 <body>
 
   <header>
-    <div class="logo">AUZAN <span>STORE</span></div>
-    <div class="tagline">Jual Paket XL / AXIS AKRAB Termurah dan Terpercaya</div>
+    <h1>AUZAN STORE</h1>
+    <p>Pusat Paket Internet XL / AXIS AKRAB</p>
   </header>
 
-  <section class="packages" id="package-list">
-    <!-- Paket akan diisi otomatis dari JSON -->
-  </section>
-
-  <footer>
-    &copy; 2025 AUZAN STORE. All Rights Reserved.
-  </footer>
+  <div class="container" id="paketContainer">
+    <p>Memuat paket...</p>
+  </div>
 
   <script>
-    async function loadPackages() {
+    const sheetURL = 'https://script.google.com/macros/s/AKfycbz698wTJ7_-BclMcEziWXNaTNUOcxRhTLCAPngcBVzOysRsI1351JgTEstWoxYaMcrz/exec'; // Ganti dengan URL kamu
+
+    async function loadPaket() {
+      const container = document.getElementById('paketContainer');
+      container.innerHTML = '<p>Memuat paket...</p>';
+
       try {
-        const res = await fetch('paket.json');
+        const res = await fetch(sheetURL);
         const data = await res.json();
-        const container = document.getElementById('package-list');
+
+        if (!Array.isArray(data) || data.length === 0) {
+          container.innerHTML = '<p>Tidak ada paket tersedia.</p>';
+          return;
+        }
+
         container.innerHTML = '';
 
-        data.forEach(paket => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <h3>${paket.nama}</h3>
-            <div class="price">Rp ${paket.harga}</div>
-            <ul>
-              ${paket.detail.map(item => `<li>${item}</li>`).join('')}
+        data.forEach(p => {
+          const div = document.createElement('div');
+          div.className = 'paket-box';
+
+          div.innerHTML = `
+            <h3>${p.nama}</h3>
+            <div class="harga">Rp ${p.harga}</div>
+            <ul class="detail">
+              ${p.detail.map(d => `<li>${d}</li>`).join('')}
             </ul>
-            <a href="${paket.link}" class="buy-btn" target="_blank">Beli Sekarang</a>
+            <a class="btn-beli" href="${p.link}" target="_blank">🛒 Beli Sekarang</a>
           `;
-          container.appendChild(card);
+
+          container.appendChild(div);
         });
-      } catch (error) {
-        document.getElementById('package-list').innerHTML = '<p style="color: white;">Gagal memuat paket. Pastikan paket.json tersedia.</p>';
-        console.error('Gagal memuat paket:', error);
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p>Gagal memuat data. Coba lagi nanti.</p>';
       }
     }
 
-    loadPackages();
+    loadPaket();
   </script>
 
 </body>
