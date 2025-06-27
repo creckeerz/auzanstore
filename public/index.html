@@ -128,20 +128,20 @@
 
 <script>
   function generatePesan(paket) {
-    const detailText = paket.detail.map(line => `- ${line}`).join('\n');
-    const pesan = 
+  const detailText = paket.detail.map(line => `- ${line}`).join('\n');
+  const pesan = 
 `Halo Admin Auzan Store,
 Saya ingin beli paket berikut:
 
 📦 Nama: ${paket.nama}
-💰 Harga: Rp ${paket.harga}
+💰 Harga: Rp ${formatRupiah(paket.harga)}
 📄 Detail:
 ${detailText}
 
 Mohon diproses ya.`;
+  return encodeURIComponent(pesan);
+}
 
-    return encodeURIComponent(pesan); // encode hanya isi pesan
-  }
 </script>
 
 
@@ -162,7 +162,7 @@ Mohon diproses ya.`;
           card.innerHTML = `
             <div>
               <div class="paket-title">${paket.nama}</div>
-              <div class="paket-harga">Rp ${paket.harga}</div>
+              <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
               ${detailHTML}
             </div>
             <div class="paket-link">
