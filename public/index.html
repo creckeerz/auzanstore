@@ -3,100 +3,148 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Auzan Store - Paket Internet</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <title>Auzan Store - Paket Internet XL / AXIS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #4b6cb7;
+      --secondary: #182848;
+      --bg: #f5f7fb;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
-      padding: 20px;
-      background: #f9f9f9;
+      background-color: var(--bg);
+      color: #333;
     }
 
-    h1 {
+    header {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      padding: 40px 20px;
       text-align: center;
-      color: #333;
-      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      margin: 0;
+    }
+
+    header p {
+      font-size: 16px;
+      margin-top: 10px;
     }
 
     .paket-container {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 20px;
-      justify-content: center;
+      padding: 30px 20px;
+      max-width: 1200px;
+      margin: auto;
     }
 
     .paket-card {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       padding: 20px;
-      max-width: 300px;
-      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       transition: transform 0.2s;
     }
 
     .paket-card:hover {
-      transform: scale(1.02);
+      transform: translateY(-5px);
     }
 
     .paket-title {
       font-size: 18px;
-      color: #2c3e50;
+      font-weight: 600;
       margin-bottom: 10px;
-      font-weight: bold;
+      color: var(--secondary);
     }
 
     .paket-harga {
-      color: #27ae60;
       font-size: 16px;
+      color: #27ae60;
+      font-weight: bold;
       margin-bottom: 10px;
     }
 
     .paket-detail {
       font-size: 14px;
-      color: #444;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      color: #555;
     }
 
     .paket-link a {
-      display: inline-block;
-      background: #4b6cb7;
+      background-color: var(--primary);
       color: #fff;
-      padding: 8px 12px;
-      border-radius: 6px;
+      padding: 10px;
+      border-radius: 8px;
       text-decoration: none;
-      font-size: 14px;
+      text-align: center;
+      display: block;
+      transition: background-color 0.2s;
+      margin-top: 15px;
     }
 
     .paket-link a:hover {
-      background: #3a549d;
+      background-color: #3a549d;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 16px;
+      color: #999;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      padding: 20px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🛒 Auzan Store - Paket Internet</h1>
+  <header>
+    <h1>📶 AUZAN STORE</h1>
+    <p>Pusat Penjualan Kuota Internet XL / AXIS AKRAB • Aman, Cepat & Terpercaya!</p>
+  </header>
 
   <div class="paket-container" id="paketContainer">
-    <!-- Paket akan dimuat di sini -->
+    <div class="loading">Memuat paket...</div>
   </div>
+
+  <footer>
+    &copy; 2025 Auzan Store. Powered by XL / AXIS AKRAB.
+  </footer>
 
   <script>
     fetch('/api/data')
       .then(res => res.json())
       .then(data => {
         const container = document.getElementById('paketContainer');
+        container.innerHTML = ''; // Hapus loading
+
         data.forEach(paket => {
           const card = document.createElement('div');
           card.className = 'paket-card';
 
-          const detailHTML = paket.detail.map(line => `<div class="paket-detail">${line}</div>`).join('');
+          const detailHTML = paket.detail.map(line => `<div class="paket-detail">• ${line}</div>`).join('');
 
           card.innerHTML = `
-            <div class="paket-title">${paket.nama}</div>
-            <div class="paket-harga">Rp ${paket.harga}</div>
-            ${detailHTML}
+            <div>
+              <div class="paket-title">${paket.nama}</div>
+              <div class="paket-harga">Rp ${paket.harga}</div>
+              ${detailHTML}
+            </div>
             <div class="paket-link"><a href="${paket.link}" target="_blank">Beli Sekarang</a></div>
           `;
 
@@ -105,7 +153,7 @@
       })
       .catch(err => {
         console.error('Gagal memuat data:', err);
-        document.getElementById('paketContainer').innerHTML = '<p>Gagal memuat data paket.</p>';
+        document.getElementById('paketContainer').innerHTML = '<p class="loading">Gagal memuat data paket.</p>';
       });
   </script>
 
