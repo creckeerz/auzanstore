@@ -129,16 +129,21 @@
 <script>
   function generatePesan(paket) {
     const detailText = paket.detail.map(line => `- ${line}`).join('\n');
-    const pesan = `Halo Admin Auzan Store,\n` +
-                  `Saya ingin beli paket berikut:\n\n` +
-                  `📦 Nama: ${paket.nama}\n` +
-                  `💰 Harga: Rp ${paket.harga}\n` +
-                  `📄 Detail:\n${detailText}\n\n` +
-                  `Mohon diproses ya.`;
+    const pesan = 
+`Halo Admin Auzan Store,
+Saya ingin beli paket berikut:
 
-    return encodeURIComponent(pesan); // encode sekali di sini saja
+📦 Nama: ${paket.nama}
+💰 Harga: Rp ${paket.harga}
+📄 Detail:
+${detailText}
+
+Mohon diproses ya.`;
+
+    return encodeURIComponent(pesan); // encode hanya isi pesan
   }
 </script>
+
 
   
   <script>
@@ -161,8 +166,11 @@
               ${detailHTML}
             </div>
             <div class="paket-link">
-  <a href="https://wa.me/${encodeURIComponent(6283125361094)}?text=${encodeURIComponent(generatePesan(paket))}" target="_blank">Beli Sekarang</a>
+  <a href="https://wa.me/6281234567890?text=${generatePesan(paket)}" target="_blank">Beli Sekarang</a>
 </div>
+<div class="paket-link">
+
+
           `;
 
 
