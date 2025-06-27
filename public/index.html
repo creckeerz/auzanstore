@@ -128,21 +128,17 @@
 
 <script>
   function generatePesan(paket) {
-    let pesan = `Halo Admin Auzan Store,%0A` +
-                `Saya ingin beli paket berikut:%0A%0A` +
-                `📦 Nama: ${paket.nama}%0A` +
-                `💰 Harga: Rp ${paket.harga}%0A` +
-                `📄 Detail:%0A`;
+    const detailText = paket.detail.map(line => `- ${line}`).join('\n');
+    const pesan = `Halo Admin Auzan Store,\n` +
+                  `Saya ingin beli paket berikut:\n\n` +
+                  `📦 Nama: ${paket.nama}\n` +
+                  `💰 Harga: Rp ${paket.harga}\n` +
+                  `📄 Detail:\n${detailText}\n\n` +
+                  `Mohon diproses ya.`;
 
-    paket.detail.forEach(line => {
-      pesan += `- ${line}%0A`;
-    });
-
-    pesan += `%0AMohon diproses ya.`;
-    return pesan;
+    return encodeURIComponent(pesan); // encode sekali di sini saja
   }
 </script>
-
 
   
   <script>
@@ -168,6 +164,8 @@
   <a href="https://wa.me/${encodeURIComponent(6283125361094)}?text=${encodeURIComponent(generatePesan(paket))}" target="_blank">Beli Sekarang</a>
 </div>
           `;
+
+
 
           container.appendChild(card);
         });
