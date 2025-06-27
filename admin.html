@@ -125,9 +125,22 @@
       const jsonOutput = JSON.stringify(data, null, 2);
       console.log(jsonOutput); // sementara tampilkan dulu di konsol
 
-      // Simpan ke server di sini (gunakan fetch POST ke backend/API kalau siap)
-      alert("Data berhasil disiapkan. Lihat console (F12) untuk hasil JSON. Hubungkan ke backend untuk menyimpan.");
-    });
+      fetch('https://script.google.com/macros/s/AKfycbz698wTJ7_-BclMcEziWXNaTNUOcxRhTLCAPngcBVzOysRsI1351JgTEstWoxYaMcrz/exec', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+.then(res => res.text())
+.then(result => {
+  alert(result || 'Berhasil simpan ke Google Sheet');
+})
+.catch(err => {
+  alert('Gagal menyimpan ke Google Sheet');
+  console.error(err);
+});
+
   </script>
 
 </body>
