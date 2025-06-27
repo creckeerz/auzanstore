@@ -12,28 +12,42 @@
       background: #f4f6f9;
       margin: 0;
     }
+
     h2 {
       text-align: center;
       color: #2c3e50;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
+
+    .paket-select {
+      margin: 0 auto 30px;
+      text-align: center;
+    }
+
+    select {
+      font-size: 16px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
     .paket-form {
       background: #fff;
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       padding: 20px;
       margin-bottom: 20px;
+      display: none;
     }
-    .paket-form h3 {
-      margin-top: 0;
-      color: #4b6cb7;
-    }
+
     label {
       display: block;
       margin-top: 10px;
       font-weight: bold;
     }
-    input[type="text"], textarea {
+
+    input[type="text"],
+    textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -41,9 +55,11 @@
       margin-top: 5px;
       font-size: 14px;
     }
+
     textarea {
       resize: vertical;
     }
+
     button {
       background-color: #4b6cb7;
       color: #fff;
@@ -55,34 +71,50 @@
       display: block;
       margin: 30px auto 0;
     }
+
     button:hover {
       background-color: #3a549d;
-    }
-    .note {
-      font-size: 12px;
-      color: #555;
-    }
-    @media (max-width: 600px) {
-      .paket-form h3 {
-        font-size: 16px;
-      }
     }
   </style>
 </head>
 <body>
+
   <h2>Panel Admin - AUZAN STORE</h2>
+
+  <div class="paket-select">
+    <label for="selectPaket">Pilih Paket:</label>
+    <select id="selectPaket">
+      <option value="">-- Pilih Paket --</option>
+      <!-- Paket 1–8 -->
+    </select>
+  </div>
+
   <form id="formPaket">
-    <div id="boxContainer"></div>
+    <div id="boxContainer">
+      <!-- Box Form Akan Dimuat Otomatis -->
+    </div>
     <button type="submit">💾 Simpan Semua Paket</button>
   </form>
+
   <script>
     const boxCount = 8;
     const boxContainer = document.getElementById('boxContainer');
+    const selectPaket = document.getElementById('selectPaket');
+
+    // Tambahkan dropdown options
+    for (let i = 0; i < boxCount; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = `Paket #${i + 1}`;
+      selectPaket.appendChild(option);
+    }
+
+    // Buat semua box form
     for (let i = 0; i < boxCount; i++) {
       const box = document.createElement('div');
       box.className = 'paket-form';
+      box.id = `paket${i}`;
       box.innerHTML = `
-        <h3>Paket #${i + 1}</h3>
         <label>Nama Paket:</label>
         <input type="text" name="nama${i}" placeholder="Contoh: AKRAB 10GB" />
         <label>Harga:</label>
@@ -94,6 +126,19 @@
       `;
       boxContainer.appendChild(box);
     }
+
+    // Tampilkan form hanya untuk paket yang dipilih
+    selectPaket.addEventListener('change', () => {
+      for (let i = 0; i < boxCount; i++) {
+        document.getElementById(`paket${i}`).style.display = 'none';
+      }
+      const selected = selectPaket.value;
+      if (selected !== '') {
+        document.getElementById(`paket${selected}`).style.display = 'block';
+      }
+    });
+
+    // Simpan data
     document.getElementById('formPaket').addEventListener('submit', function (e) {
       e.preventDefault();
       const data = [];
@@ -106,10 +151,12 @@
           data.push({ nama, harga, detail, link });
         }
       }
+
       if (data.length === 0) {
         alert("Isi minimal 1 paket sebelum menyimpan.");
         return;
       }
+
       fetch('/api/simpan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -125,5 +172,6 @@
       });
     });
   </script>
+
 </body>
 </html>
