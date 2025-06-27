@@ -12,10 +12,6 @@
       --bg: #f5f7fb;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -26,12 +22,12 @@
     header {
       background: linear-gradient(to right, var(--primary), var(--secondary));
       color: white;
-      padding: 50px 20px;
+      padding: 40px 20px;
       text-align: center;
     }
 
     header h1 {
-      font-size: 32px;
+      font-size: 28px;
       margin: 0;
     }
 
@@ -52,17 +48,16 @@
     .paket-card {
       background: #fff;
       border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: all 0.25s ease;
+      transition: transform 0.2s;
     }
 
     .paket-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
     }
 
     .paket-title {
@@ -81,24 +76,24 @@
 
     .paket-detail {
       font-size: 14px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       color: #555;
     }
 
     .paket-link a {
-      background-color: #25d366;
-      color: white;
+      background-color: var(--primary);
+      color: #fff;
       padding: 10px;
       border-radius: 8px;
       text-decoration: none;
       text-align: center;
       display: block;
-      transition: background-color 0.2s ease;
-      font-weight: bold;
+      transition: background-color 0.2s;
+      margin-top: 15px;
     }
 
     .paket-link a:hover {
-      background-color: #1da851;
+      background-color: #3a549d;
     }
 
     .loading {
@@ -130,17 +125,18 @@
   <footer>
     &copy; 2025 Auzan Store. Powered by XL / AXIS AKRAB.
   </footer>
-
-  <script>
-    function formatRupiah(angka) {
-      const num = parseInt(angka.toString().replace(/[^\d]/g, ''));
-      if (isNaN(num)) return angka;
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    function generatePesan(paket) {
-      const detailText = paket.detail.map(line => `- ${line}`).join('\n');
-      const pesan = 
+<script>
+function formatRupiah(angka) {
+  const num = parseInt(angka.toString().replace(/[^\d]/g, '')); // bersihkan
+  if (isNaN(num)) return angka; // fallback jika bukan angka
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+</script>
+  
+<script>
+  function generatePesan(paket) {
+  const detailText = paket.detail.map(line => `- ${line}`).join('\n');
+  const pesan = 
 `Halo Admin Auzan Store,
 Saya ingin beli paket berikut:
 
@@ -150,14 +146,17 @@ Saya ingin beli paket berikut:
 ${detailText}
 
 Mohon diproses ya.`;
-      return encodeURIComponent(pesan);
-    }
+  return encodeURIComponent(pesan);
+}
 
+</script>
+
+  <script>
     fetch('/api/data')
       .then(res => res.json())
       .then(data => {
         const container = document.getElementById('paketContainer');
-        container.innerHTML = ''; // Bersihkan loading
+        container.innerHTML = ''; // Hapus loading
 
         data.forEach(paket => {
           const card = document.createElement('div');
@@ -172,11 +171,14 @@ Mohon diproses ya.`;
               ${detailHTML}
             </div>
             <div class="paket-link">
-              <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">
-                📲 Beli Sekarang via WhatsApp
-              </a>
-            </div>
+  <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">Beli Sekarang</a>
+</div>
+<div class="paket-link">
+
+
           `;
+
+
 
           container.appendChild(card);
         });
