@@ -2,7 +2,13 @@
   {
     "nama": "AKRAB 10GB",
     "harga": "25.000",
-    "detail": ["Kuota Utama: 10GB", "30 Hari", "2 Pengguna"],
-    "link": "https://wa.me/6281234567890?text=Beli%20AKRAB%2010GB"
+    "detail": ["Kuota: 10GB", "30 Hari", "Bisa 2 pengguna"],
+    "link": "https://wa.me/6281234567890"
+  },
+  {
+    "nama": "AKRAB 25GB",
+    "harga": "45.000",
+    "detail": ["Kuota: 25GB", "30 Hari", "3 pengguna"],
+    "link": "https://wa.me/6281234567890"
   }
 ]
