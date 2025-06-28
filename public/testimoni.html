@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Auzan Store - Paket Internet XL / AXIS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./public/style.css">
+</head>
+<body>
+
+  <!-- Tombol Testimoni Pelanggan di pojok kanan atas -->
+  <div class="testimoni-button">
+    <a href="#testimoni">Testimoni Pelanggan</a>
+  </div>
+
+  <header>
+    <h1>📶 AUZAN STORE</h1>
+    <p>Pusat Penjualan Kuota Internet XL / AXIS AKRAB • Aman, Cepat & Terpercaya!</p>
+  </header>
+
+  <div class="paket-container" id="paketContainer">
+    <div class="loading">Memuat paket...</div>
+  </div>
+
+  <section id="testimoni">
+    <h2>📸 Testimoni Pelanggan</h2>
+    <p>Bukti nyata transaksi dan kepercayaan pelanggan terhadap layanan kami. Aman, Cepat, Terpercaya!</p>
+
+    <div class="slider">
+      <div class="slides" id="slides">
+        <img src="https://miro.medium.com/v2/resize:fit:880/1*GIQ-UuBj8sotwryX8DIWhg.png" alt="Testimoni 1">
+        <img src="https://miro.medium.com/v2/resize:fit:880/1*GIQ-UuBj8sotwryX8DIWhg.png" alt="Testimoni 2">
+        <img src="https://miro.medium.com/v2/resize:fit:880/1*GIQ-UuBj8sotwryX8DIWhg.png" alt="Testimoni 3">
+      </div>
+      <div class="nav">
+        <button onclick="prevSlide()">❮</button>
+        <button onclick="nextSlide()">❯</button>
+      </div>
+      <div class="dots" id="dots"></div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Auzan Store. Powered by XL / AXIS AKRAB.
+  </footer>
+
+  <!-- Floating WhatsApp -->
+  <a href="https://chat.whatsapp.com/Gyq554Eza647Ydpw5ss32i" 
+     class="whatsapp-float" target="_blank" aria-label="Gabung Grup WhatsApp">
+    <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" />
+  </a>
+
+  <script src="./public/script.js"></script>
+</body>
+</html>
