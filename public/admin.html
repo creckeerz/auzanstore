@@ -127,21 +127,27 @@
 
     // Ambil data dari /api/data dan isi field
     fetch('/api/data')
-      .then(res => res.json())
-      .then(data => {
-        data.forEach((paket, i) => {
-          if (i < boxCount) {
-            document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
-            document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
-            document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
-            document.querySelector(`[name=link${i}]`).value = paket.link || '';
-            document.querySelector(`[name=status${i}]`).value = paket.status || 'tersedia';
-          }
-        });
-      })
-      .catch(err => {
-        console.error('Gagal memuat data:', err);
+  .then(res => res.text()) // Ambil raw text dulu
+  .then(text => {
+    try {
+      const data = JSON.parse(text);
+      data.forEach((paket, i) => {
+        if (i < boxCount) {
+          document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
+          document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
+          document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
+          document.querySelector(`[name=link${i}]`).value = paket.link || '';
+          document.querySelector(`[name=status${i}]`).value = paket.status || 'tersedia';
+        }
       });
+    } catch (e) {
+      console.error('❌ JSON parsing error:', text);
+    }
+  })
+  .catch(err => {
+    console.error('Gagal memuat data:', err);
+  });
+
 
     // Submit data ke /api/simpan
     document.getElementById('formPaket').addEventListener('submit', function (e) {
