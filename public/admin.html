@@ -82,12 +82,14 @@
 </head>
 <body>
   <h2>Panel Admin - AUZAN STORE</h2>
+
   <div class="paket-select">
     <label for="selectPaket">Pilih Paket:</label>
     <select id="selectPaket">
       <option value="">-- Pilih Paket --</option>
     </select>
   </div>
+
   <form id="formPaket">
     <div id="boxContainer"></div>
     <button type="submit">💾 Simpan Semua Paket</button>
@@ -104,7 +106,7 @@
     const boxContainer = document.getElementById('boxContainer');
     const selectPaket = document.getElementById('selectPaket');
 
-    // Buat opsi paket di select dropdown
+    // Buat select option
     for (let i = 0; i < boxCount; i++) {
       const option = document.createElement('option');
       option.value = i;
@@ -112,7 +114,7 @@
       selectPaket.appendChild(option);
     }
 
-    // Buat form paket (box) secara dinamis
+    // Buat form box
     for (let i = 0; i < boxCount; i++) {
       const box = document.createElement('div');
       box.className = 'paket-form';
@@ -123,73 +125,16 @@
         <label>Nama Paket:</label>
         <input type="text" name="nama${i}" placeholder="Contoh: AKRAB 10GB" />
         <label>Harga:</label>
-        <input type="text" name="harga${i}" placeholder="Contoh: 25.000" />
+        <input type="text" name="harga${i}" placeholder="Contoh: 25000" />
         <label>Detail (Pisahkan baris dengan Enter):</label>
-        <textarea name="detail${i}" rows="3" placeholder="Contoh:
-Kuota Utama: 10GB
-Masa Aktif: 30 Hari"></textarea>
-        <label>Link Pembelian (WhatsApp/dll):</label>
+        <textarea name="detail${i}" rows="3"></textarea>
+        <label>Link Pembelian:</label>
         <input type="text" name="link${i}" placeholder="https://wa.me/..." />
       `;
       boxContainer.appendChild(box);
     }
 
-    function attachStatusBtnListeners() {
-  const statusButtons = document.querySelectorAll('.status-btn');
-  statusButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const i = parseInt(btn.dataset.index);
-      let newStatus;
-
-      if (btn.textContent === "Tersedia") {
-        newStatus = "Kosong";
-        btn.textContent = newStatus;
-        btn.classList.add("kosong");
-      } else {
-        newStatus = "Tersedia";
-        btn.textContent = newStatus;
-        btn.classList.remove("kosong");
-      }
-
-      // Kirim update status ke API
-      fetch('/api/updateStatus', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index: i, status: newStatus })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (!data.success) {
-          alert('Gagal update status ke server.');
-          // rollback perubahan UI jika gagal
-          if (newStatus === "Kosong") {
-            btn.textContent = "Tersedia";
-            btn.classList.remove("kosong");
-          } else {
-            btn.textContent = "Kosong";
-            btn.classList.add("kosong");
-          }
-        }
-      })
-      .catch(() => {
-        alert('Gagal menghubungi server.');
-        // rollback perubahan UI jika gagal
-        if (newStatus === "Kosong") {
-          btn.textContent = "Tersedia";
-          btn.classList.remove("kosong");
-        } else {
-          btn.textContent = "Kosong";
-          btn.classList.add("kosong");
-        }
-      });
-    });
-  });
-}
-
-attachStatusBtnListeners();
-
-
-    // Tampilkan form paket sesuai pilihan
+    // Tampilkan form sesuai pilihan paket
     selectPaket.addEventListener('change', () => {
       for (let i = 0; i < boxCount; i++) {
         document.getElementById(`paket${i}`).style.display = 'none';
@@ -200,7 +145,41 @@ attachStatusBtnListeners();
       }
     });
 
-    // Load data paket dari API dan isi form
+    // Attach event listener ke tombol status
+    function attachStatusBtnListeners() {
+      document.querySelectorAll('.status-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = parseInt(btn.dataset.index);
+          let newStatus;
+          if (btn.textContent === "Tersedia") {
+            newStatus = "Kosong";
+            btn.textContent = newStatus;
+            btn.classList.add("kosong");
+          } else {
+            newStatus = "Tersedia";
+            btn.textContent = newStatus;
+            btn.classList.remove("kosong");
+          }
+
+          fetch('/api/updateStatus', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ index, status: newStatus })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (!data.success) {
+              alert("Gagal menyimpan status.");
+            }
+          })
+          .catch(() => {
+            alert("Gagal menghubungi server.");
+          });
+        });
+      });
+    }
+
+    // Load data dari backend
     fetch('/api/data?t=' + Date.now())
       .then(res => res.json())
       .then(data => {
@@ -212,23 +191,16 @@ attachStatusBtnListeners();
             document.querySelector(`[name=link${i}]`).value = paket.link || '';
             const statusBtn = document.querySelector(`.status-btn[data-index="${i}"]`);
             if (statusBtn) {
-              if (paket.status === "Kosong") {
-                statusBtn.textContent = "Kosong";
-                statusBtn.classList.add("kosong");
-              } else {
-                statusBtn.textContent = "Tersedia";
-                statusBtn.classList.remove("kosong");
-              }
+              statusBtn.textContent = paket.status === 'Kosong' ? 'Kosong' : 'Tersedia';
+              statusBtn.classList.toggle('kosong', paket.status === 'Kosong');
             }
           }
         });
-      })
-      .catch(err => {
-        console.error('Gagal memuat data:', err);
+        attachStatusBtnListeners(); // pasang setelah data selesai dimuat
       });
 
-    // Submit simpan semua paket ke API
-    document.getElementById('formPaket').addEventListener('submit', function (e) {
+    // Submit simpan semua paket
+    document.getElementById('formPaket').addEventListener('submit', e => {
       e.preventDefault();
       const data = [];
       for (let i = 0; i < boxCount; i++) {
@@ -241,10 +213,12 @@ attachStatusBtnListeners();
           data.push({ status, nama, harga, detail, link });
         }
       }
+
       if (data.length === 0) {
-        alert("Isi minimal 1 paket sebelum menyimpan.");
+        alert("Isi minimal 1 paket.");
         return;
       }
+
       fetch('/api/simpan?t=' + Date.now(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -252,15 +226,15 @@ attachStatusBtnListeners();
       })
       .then(res => res.text())
       .then(result => {
-        alert(result || 'Berhasil simpan ke Google Sheet');
+        alert(result || '✅ Data berhasil disimpan.');
       })
       .catch(err => {
-        alert('Gagal menyimpan ke Google Sheet');
+        alert('❌ Gagal menyimpan data.');
         console.error(err);
       });
     });
 
-    // Fungsi untuk set status maintenance
+    // Maintenance ON/OFF
     function setMaintenance(active) {
       const status = active ? "maintenance" : "normal";
       fetch("/api/maintenance", {
@@ -270,11 +244,11 @@ attachStatusBtnListeners();
       })
       .then(res => res.json())
       .then(data => {
-        alert("✅ Status diubah menjadi: " + status);
+        alert("Status website: " + status.toUpperCase());
       })
       .catch(err => {
-        alert("❌ Gagal mengubah status:\n" + err);
-        console.error("Full error:", err);
+        alert("Gagal update status maintenance.");
+        console.error(err);
       });
     }
   </script>
