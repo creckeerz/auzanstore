@@ -284,7 +284,7 @@
   </script>
 
   <script>
-const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbxYlolbrJEjxK8N1kQl-UIzmSI4TdlZ4LKLCgr2Kl9BpaQPw4pK8zs-JqoVdJxFQ1Ml/exec"; // Ganti dengan URL Web App kamu
+const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzqa6eCcoOEbbGpSnxnC9Q_hMBHHX1awg1Zebv8k4ZnrZIxwH6aHp0VZk-Rvd2QAsVa/exec"; // Ganti dengan URL Web App kamu
 
 document.getElementById('fileInput').addEventListener('change', function(e) {
   const file = e.target.files[0];
@@ -314,7 +314,7 @@ function uploadImage() {
 
     document.getElementById('uploadStatus').innerText = '⏳ Mengupload...';
 
-    fetch("https://script.google.com/macros/s/AKfycbxYlolbrJEjxK8N1kQl-UIzmSI4TdlZ4LKLCgr2Kl9BpaQPw4pK8zs-JqoVdJxFQ1Ml/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbzqa6eCcoOEbbGpSnxnC9Q_hMBHHX1awg1Zebv8k4ZnrZIxwH6aHp0VZk-Rvd2QAsVa/exec", {
       method: "POST",
       body: formData,
     })
