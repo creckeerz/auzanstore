@@ -143,25 +143,46 @@ Masa Aktif: 30 Hari"></textarea>
     });
 
     fetch('/api/data?t=' + Date.now())
-      .then(res => res.json())
-      .then(data => {
-        data.forEach((paket, i) => {
-          if (i < boxCount) {
-            document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
-            document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
-            document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
-            document.querySelector(`[name=link${i}]`).value = paket.link || '';
-            const statusBtn = document.querySelector(`.status-btn[data-index="${i}"]`);
-            if (statusBtn && paket.status === "Kosong") {
-              statusBtn.textContent = "Kosong";
-              statusBtn.classList.add("kosong");
-            }
+  .then(res => res.json())
+  .then(data => {
+    data.forEach((paket, i) => {
+      if (i < boxCount) {
+        document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
+        document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
+        document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
+        document.querySelector(`[name=link${i}]`).value = paket.link || '';
+        const statusBtn = document.querySelector(`.status-btn[data-index="${i}"]`);
+        if (statusBtn) {
+          if (paket.status === "Kosong") {
+            statusBtn.textContent = "Kosong";
+            statusBtn.classList.add("kosong");
+          } else {
+            statusBtn.textContent = "Tersedia";
+            statusBtn.classList.remove("kosong");
           }
-        });
-      })
-      .catch(err => {
-        console.error('Gagal memuat data:', err);
-      });
+        }
+      }
+    });
+  })
+  .catch(err => {
+    console.error('Gagal memuat data:', err);
+  });
+
+setTimeout(() => {
+  const statusButtons = document.querySelectorAll('.status-btn');
+  statusButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.textContent === "Tersedia") {
+        btn.textContent = "Kosong";
+        btn.classList.add("kosong");
+      } else {
+        btn.textContent = "Tersedia";
+        btn.classList.remove("kosong");
+      }
+    });
+  });
+}, 500);
+
 
     document.getElementById('formPaket').addEventListener('submit', function (e) {
       e.preventDefault();
