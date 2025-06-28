@@ -87,33 +87,46 @@
     }
 
     .maintenance {
-      text-align: center;
-      margin-top: 50px;
-    }
+  text-align: center;
+  margin-top: 50px;
+}
 
-    .maintenance h3 {
-      margin-bottom: 16px;
-      color: var(--secondary);
-    }
+.maintenance h3 {
+  margin-bottom: 16px;
+  color: var(--secondary);
+}
 
-    .maintenance button {
-      margin: 8px;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-    }
+.maintenance button {
+  margin: 8px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+}
 
-    .maintenance button:first-child {
-      background-color: orangered;
-    }
+.maintenance .on-btn {
+  background-color: seagreen;
+}
 
-    .maintenance button:last-child {
-      background-color: seagreen;
-    }
+.maintenance .on-btn:hover {
+  background-color: #2e8b57;
+}
+
+.maintenance .off-btn {
+  background-color: crimson;
+}
+
+.maintenance .off-btn:hover {
+  background-color: #b22222;
+}
+
   </style>
 </head>
 <body>
@@ -132,10 +145,11 @@
   </form>
 
   <div class="maintenance">
-    <h3>Status Maintenance Website</h3>
-    <button onclick="setMaintenance(true)">Aktifkan Maintenance</button>
-    <button onclick="setMaintenance(false)">Nonaktifkan Maintenance</button>
-  </div>
+  <h3>Status Maintenance Website</h3>
+  <button class="on-btn" onclick="setMaintenance(true)">🟢 Aktifkan Maintenance</button>
+  <button class="off-btn" onclick="setMaintenance(false)">🔴 Nonaktifkan Maintenance</button>
+</div>
+
 
   <script>
     const boxCount = 8;
