@@ -190,7 +190,7 @@ Mohon diproses ya.`;
   </script>
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-    fetch('/api/status')
+    fetch('https://script.google.com/macros/s/AKfycbztVhLkhGqEZwRf9CvKYh_gOYTP9KBKyz9q6D2jmiJkQY-bp5KlimSqkc10wnIO6mZn/exec?maintenance=true')
       .then(res => res.json())
       .then(data => {
         if (data.status === "maintenance") {
