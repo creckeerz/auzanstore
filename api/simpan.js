@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
     const text = await response.text();
 
-    // ⛔️ Tambahkan header agar hasil tidak dicache
+    // 🔒 Mencegah cache
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
