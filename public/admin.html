@@ -98,15 +98,20 @@
       box.className = 'paket-form';
       box.id = `paket${i}`;
       box.innerHTML = `
-        <label>Nama Paket:</label>
-        <input type="text" name="nama${i}" placeholder="Contoh: AKRAB 10GB" />
-        <label>Harga:</label>
-        <input type="text" name="harga${i}" placeholder="Contoh: 25.000" />
-        <label>Detail (Pisahkan baris dengan Enter):</label>
-        <textarea name="detail${i}" rows="3" placeholder="Contoh:\nKuota Utama: 10GB\nMasa Aktif: 30 Hari"></textarea>
-        <label>Link Pembelian (WhatsApp/dll):</label>
-        <input type="text" name="link${i}" placeholder="https://wa.me/..." />
-      `;
+  <label>Nama Paket:</label>
+  <input type="text" name="nama${i}" placeholder="Contoh: AKRAB 10GB" />
+  <label>Harga:</label>
+  <input type="text" name="harga${i}" placeholder="Contoh: 25.000" />
+  <label>Detail (Pisahkan baris dengan Enter):</label>
+  <textarea name="detail${i}" rows="3" placeholder="Contoh:\nKuota Utama: 10GB\nMasa Aktif: 30 Hari"></textarea>
+  <label>Link Pembelian (WhatsApp/dll):</label>
+  <input type="text" name="link${i}" placeholder="https://wa.me/..." />
+  <label>Status Paket:</label>
+  <select name="status${i}">
+    <option value="tersedia">Tersedia</option>
+    <option value="kosong">Kosong</option>
+  </select>
+`;
       boxContainer.appendChild(box);
     }
 
