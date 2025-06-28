@@ -8,16 +8,19 @@ export default async function handler(req, res) {
       }
     );
 
-    const json = await response.json();
+    const text = await response.text();
 
-    // Anti cache
-    res.setHeader('Cache-Control', 'no-store');
-    res.status(200).json(json);
+    // Coba parse ke JSON
+    try {
+      const json = JSON.parse(text);
+      res.setHeader('Cache-Control', 'no-store');
+      res.status(200).json(json);
+    } catch (parseErr) {
+      console.error('❌ Parsing JSON gagal. Respons:', text);
+      res.status(500).send('❌ Response bukan JSON: \n' + text);
+    }
   } catch (error) {
-    console.error('Fetch Data Error:', error);
+    console.error('❌ Fetch ke GAS gagal:', error);
     res.status(500).json({ error: 'Gagal ambil data dari Spreadsheet' });
   }
 }
-
-document.querySelector(`[name=status${i}]`).value = paket.status || 'tersedia';
-
