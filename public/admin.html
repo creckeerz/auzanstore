@@ -59,16 +59,15 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
+      margin: 20px auto;
       display: block;
-      margin: 30px auto 0;
+      transition: 0.3s;
     }
     button:hover {
       background-color: #3a549d;
     }
-
-    #btnMaintenance {
-      margin-top: 20px;
-      background-color: #2ecc71;
+    #toggleMaintenance.active {
+      background-color: #27ae60;
     }
   </style>
 </head>
@@ -85,16 +84,13 @@
     <button type="submit">💾 Simpan Semua Paket</button>
   </form>
 
-  <button type="button" id="btnMaintenance">🛠️ Cek Status...</button>
+  <button id="toggleMaintenance">🔧 Aktifkan Maintenance</button>
 
   <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwZqmS9HQsUAspgiz_R2b5KgJ5vmcIsnhtQ_n8IAMInRH2Z5Ky_zWFXe77xA6AORAJ5/exec";
     const boxCount = 8;
     const boxContainer = document.getElementById('boxContainer');
     const selectPaket = document.getElementById('selectPaket');
-    const btnMaintenance = document.getElementById('btnMaintenance');
-
-    // GANTI INI DENGAN URL Web App KAMU
-    const baseURL = 'https://script.google.com/macros/s/AKfycbzztZQuzF8BrXzYmzS7Cebm0CO54j4MLr7-_iD40RsRx3W1yv-jWbVr37RGqRRGLE3p/exec';
 
     for (let i = 0; i < boxCount; i++) {
       const option = document.createElement('option');
@@ -111,10 +107,10 @@
         <label>Nama Paket:</label>
         <input type="text" name="nama${i}" placeholder="Contoh: AKRAB 10GB" />
         <label>Harga:</label>
-        <input type="text" name="harga${i}" placeholder="Contoh: 25000" />
+        <input type="text" name="harga${i}" placeholder="Contoh: 25.000" />
         <label>Detail (Pisahkan baris dengan Enter):</label>
         <textarea name="detail${i}" rows="3" placeholder="Contoh:\nKuota Utama: 10GB\nMasa Aktif: 30 Hari"></textarea>
-        <label>Link Pembelian:</label>
+        <label>Link Pembelian (WhatsApp/dll):</label>
         <input type="text" name="link${i}" placeholder="https://wa.me/..." />
       `;
       boxContainer.appendChild(box);
@@ -130,7 +126,8 @@
       }
     });
 
-    fetch(baseURL)
+    // Load data dari Sheet
+    fetch(scriptURL)
       .then(res => res.json())
       .then(data => {
         data.forEach((paket, i) => {
@@ -143,6 +140,7 @@
         });
       });
 
+    // Simpan data ke Sheet
     document.getElementById('formPaket').addEventListener('submit', function (e) {
       e.preventDefault();
       const data = [];
@@ -155,57 +153,57 @@
           data.push({ nama, harga, detail, link });
         }
       }
-      if (data.length === 0) {
-        alert("Isi minimal 1 paket sebelum menyimpan.");
-        return;
-      }
-      fetch(baseURL, {
+      if (data.length === 0) return alert("Isi minimal 1 paket sebelum menyimpan.");
+      
+      fetch(scriptURL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
       .then(res => res.text())
-      .then(result => {
-        alert(result || 'Berhasil simpan ke Google Sheet');
-      })
+      .then(result => alert(result))
       .catch(err => {
-        alert('Gagal menyimpan ke Google Sheet');
+        alert('❌ Gagal menyimpan ke Google Sheet');
         console.error(err);
       });
     });
 
-    // ==== TOGGLE MAINTENANCE ====
-    let maintenanceAktif = false;
+    // Toggle Maintenance
+    const maintenanceBtn = document.getElementById('toggleMaintenance');
+    let statusNow = 'normal';
 
-    function updateTombol() {
-      btnMaintenance.textContent = maintenanceAktif ? '🛠️ Maintenance Berlangsung' : '✅ Maintenance Selesai';
-      btnMaintenance.style.backgroundColor = maintenanceAktif ? '#e67e22' : '#2ecc71';
-      btnMaintenance.style.color = '#fff';
-    }
-
-    function toggleMaintenance() {
-      const newStatus = maintenanceAktif ? 'normal' : 'maintenance';
-      fetch(baseURL + '?mode=update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: newStatus
-      })
-      .then(() => {
-        maintenanceAktif = !maintenanceAktif;
-        updateTombol();
-      })
-      .catch(() => alert('❌ Gagal mengubah status maintenance'));
-    }
-
-    btnMaintenance.addEventListener('click', toggleMaintenance);
-
-    // Ambil status awal saat halaman dibuka
-    fetch(baseURL + '?mode=status')
+    // Cek status awal
+    fetch(`${scriptURL}?mode=status`)
       .then(res => res.text())
       .then(status => {
-        maintenanceAktif = status === 'maintenance';
-        updateTombol();
+        statusNow = status;
+        updateMaintenanceButton(statusNow);
       });
+
+    maintenanceBtn.addEventListener('click', () => {
+      const newStatus = statusNow === 'maintenance' ? 'normal' : 'maintenance';
+      fetch(`${scriptURL}?mode=update`, {
+        method: 'POST',
+        body: newStatus
+      })
+      .then(res => res.text())
+      .then(msg => {
+        statusNow = newStatus;
+        updateMaintenanceButton(statusNow);
+        alert(msg);
+      })
+      .catch(() => alert('❌ Gagal mengubah status maintenance'));
+    });
+
+    function updateMaintenanceButton(status) {
+      if (status === 'maintenance') {
+        maintenanceBtn.classList.add('active');
+        maintenanceBtn.textContent = '🛠️ Maintenance Sedang Aktif';
+      } else {
+        maintenanceBtn.classList.remove('active');
+        maintenanceBtn.textContent = '🔧 Aktifkan Maintenance';
+      }
+    }
   </script>
 </body>
 </html>
