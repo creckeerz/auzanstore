@@ -1,3 +1,65 @@
+.upload-section {
+  background: #fff;
+  padding: 25px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  margin-top: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.upload-section h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.upload-section input[type="file"] {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.upload-section img {
+  max-width: 100%;
+  height: auto;
+  margin: 15px 0;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.upload-section button {
+  background-color: #4b6cb7;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.upload-section button:hover {
+  background-color: #3a549d;
+}
+
+#uploadStatus {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #2c3e50;
+  word-break: break-word;
+}
+
 /* Admin Dashboard — Auzan Store Theme */
 body {
   font-family: 'Poppins', sans-serif;
@@ -181,67 +243,3 @@ footer {
   color: #999;
   padding: 30px 20px;
 }
-
-.upload-section {
-  background: #fff;
-  padding: 25px 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-  margin-top: 40px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
-.upload-section h3 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-  font-weight: 600;
-}
-
-.upload-section input[type="file"] {
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #f9f9f9;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.upload-section img {
-  max-width: 100%;
-  height: auto;
-  margin: 15px 0;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.upload-section button {
-  background-color: #4b6cb7;
-  color: #fff;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  transition: background-color 0.2s;
-  margin-top: 10px;
-}
-
-.upload-section button:hover {
-  background-color: #3a549d;
-}
-
-#uploadStatus {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #2c3e50;
-  word-break: break-word;
-}
-
-
