@@ -6,69 +6,119 @@
   <title>Admin Panel - Auzan Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #4b6cb7;
+      --secondary: #182848;
+      --bg: #f5f7fb;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
-      padding: 20px;
-      background: #f4f6f9;
+      padding: 30px 20px;
+      background: var(--bg);
       margin: 0;
+      color: #333;
     }
+
     h2 {
       text-align: center;
-      color: #2c3e50;
-      margin-bottom: 20px;
+      color: var(--secondary);
+      margin-bottom: 30px;
     }
+
     .paket-select {
       margin: 0 auto 30px;
       text-align: center;
     }
-    select {
+
+    .paket-select select {
       font-size: 16px;
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-radius: 8px;
       border: 1px solid #ccc;
+      font-family: inherit;
     }
+
     .paket-form {
       background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 14px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
       padding: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       display: none;
     }
+
     label {
       display: block;
-      margin-top: 10px;
-      font-weight: bold;
+      margin-top: 15px;
+      font-weight: 600;
     }
-    input[type="text"], textarea {
+
+    input[type="text"], textarea, select {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-top: 5px;
+      border-radius: 8px;
+      margin-top: 6px;
       font-size: 14px;
+      font-family: inherit;
     }
+
     textarea {
       resize: vertical;
     }
-    button {
-      background-color: #4b6cb7;
+
+    button[type="submit"] {
+      background-color: var(--primary);
       color: #fff;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: block;
+      margin: 40px auto 0;
+      transition: background-color 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #3a549d;
+    }
+
+    .maintenance {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .maintenance h3 {
+      margin-bottom: 16px;
+      color: var(--secondary);
+    }
+
+    .maintenance button {
+      margin: 8px;
       padding: 12px 20px;
       border: none;
       border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
       cursor: pointer;
-      font-size: 16px;
-      display: block;
-      margin: 30px auto 0;
     }
-    button:hover {
-      background-color: #3a549d;
+
+    .maintenance button:first-child {
+      background-color: orangered;
+    }
+
+    .maintenance button:last-child {
+      background-color: seagreen;
     }
   </style>
 </head>
 <body>
   <h2>Panel Admin - AUZAN STORE</h2>
+
   <div class="paket-select">
     <label for="selectPaket">Pilih Paket:</label>
     <select id="selectPaket">
@@ -80,6 +130,12 @@
     <div id="boxContainer"></div>
     <button type="submit">💾 Simpan Semua Paket</button>
   </form>
+
+  <div class="maintenance">
+    <h3>Status Maintenance Website</h3>
+    <button onclick="setMaintenance(true)">Aktifkan Maintenance</button>
+    <button onclick="setMaintenance(false)">Nonaktifkan Maintenance</button>
+  </div>
 
   <script>
     const boxCount = 8;
@@ -127,29 +183,28 @@
 
     // Ambil data dari /api/data dan isi field
     fetch('/api/data')
-  .then(res => res.text()) // Ambil raw text dulu
-  .then(text => {
-    try {
-      const data = JSON.parse(text);
-      data.forEach((paket, i) => {
-        if (i < boxCount) {
-          document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
-          document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
-          document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
-          document.querySelector(`[name=link${i}]`).value = paket.link || '';
-          document.querySelector(`[name=status${i}]`).value = paket.status || 'tersedia';
+      .then(res => res.text())
+      .then(text => {
+        try {
+          const data = JSON.parse(text);
+          data.forEach((paket, i) => {
+            if (i < boxCount) {
+              document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
+              document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
+              document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
+              document.querySelector(`[name=link${i}]`).value = paket.link || '';
+              document.querySelector(`[name=status${i}]`).value = paket.status || 'tersedia';
+            }
+          });
+        } catch (e) {
+          console.error('❌ JSON parsing error:', text);
         }
+      })
+      .catch(err => {
+        console.error('Gagal memuat data:', err);
       });
-    } catch (e) {
-      console.error('❌ JSON parsing error:', text);
-    }
-  })
-  .catch(err => {
-    console.error('Gagal memuat data:', err);
-  });
 
-
-    // Submit data ke /api/simpan
+    // Simpan data
     document.getElementById('formPaket').addEventListener('submit', function (e) {
       e.preventDefault();
       const data = [];
@@ -176,22 +231,15 @@
       })
       .then(res => res.text())
       .then(result => {
-        alert(result || 'Berhasil simpan ke Google Sheet');
+        alert(result || '✅ Berhasil simpan ke Google Sheet');
       })
       .catch(err => {
-        alert('Gagal menyimpan ke Google Sheet');
+        alert('❌ Gagal menyimpan ke Google Sheet');
         console.error(err);
       });
     });
-  </script>
 
-  <div style="text-align:center; margin-top: 40px;">
-    <h3>Status Maintenance Website</h3>
-    <button onclick="setMaintenance(true)" style="background-color:orangered">Aktifkan Maintenance</button>
-    <button onclick="setMaintenance(false)" style="background-color:green">Nonaktifkan Maintenance</button>
-  </div>
-
-  <script>
+    // Fungsi Maintenance
     function setMaintenance(active) {
       const status = active ? "maintenance" : "normal";
       fetch("/api/maintenance", {
