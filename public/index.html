@@ -152,42 +152,46 @@ Mohon diproses ya.`;
 </script>
 
   <script>
-    fetch('/api/data')
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('paketContainer');
-        container.innerHTML = ''; // Hapus loading
+    <script>
+fetch('/api/status') // endpoint kamu di Vercel misalnya /api/status
+  .then(res => res.text())
+  .then(status => {
+    if (status === 'maintenance') {
+      document.getElementById('paketContainer').innerHTML = `
+        <div class="loading">🔧 Web sedang proses update kuota internet. Silakan cek kembali nanti.</div>`;
+    } else {
+      // lanjut fetch data paket
+      fetch('/api/data')
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById('paketContainer');
+          container.innerHTML = '';
 
-        data.forEach(paket => {
-          const card = document.createElement('div');
-          card.className = 'paket-card';
-
-          const detailHTML = paket.detail.map(line => `<div class="paket-detail">• ${line}</div>`).join('');
-
-          card.innerHTML = `
-            <div>
-              <div class="paket-title">${paket.nama}</div>
-              <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
-              ${detailHTML}
-            </div>
-            <div class="paket-link">
-  <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">Beli Sekarang</a>
-</div>
-<div class="paket-link">
-
-
-          `;
-
-
-
-          container.appendChild(card);
+          data.forEach(paket => {
+            const card = document.createElement('div');
+            card.className = 'paket-card';
+            const detailHTML = paket.detail.map(line => `<div class="paket-detail">• ${line}</div>`).join('');
+            card.innerHTML = `
+              <div>
+                <div class="paket-title">${paket.nama}</div>
+                <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
+                ${detailHTML}
+              </div>
+              <div class="paket-link">
+                <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">
+                  📲 Beli Sekarang via WhatsApp
+                </a>
+              </div>
+            `;
+            container.appendChild(card);
+          });
         });
-      })
-      .catch(err => {
-        console.error('Gagal memuat data:', err);
-        document.getElementById('paketContainer').innerHTML = '<p class="loading">Gagal memuat data paket.</p>';
-      });
-  </script>
+    }
+  })
+  .catch(() => {
+    document.getElementById('paketContainer').innerHTML = '<div class="loading">❌ Gagal memuat status</div>';
+  });
+</script>
 
 </body>
 </html>
