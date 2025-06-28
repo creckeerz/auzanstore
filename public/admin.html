@@ -139,13 +139,18 @@
     </select>
   </div>
 
-<h3>Upload Gambar Testimoni</h3>
-<input type="file" id="fileInput" accept="image/*">
-<br><br>
-<img id="preview" src="" style="max-width: 100%; display: none; margin-bottom: 10px;">
-<br>
-<button onclick="uploadImage()">📤 Upload Gambar</button>
-<div id="uploadStatus" style="margin-top:10px;"></div>
+<section class="upload-section">
+  <h3>📤 Upload Gambar Testimoni</h3>
+  
+  <input type="file" id="fileInput" accept="image/*">
+  <br><br>
+  <img id="preview" src="" style="display:none;" alt="Preview Testimoni">
+  
+  <button type="button" onclick="uploadImage()">Unggah Gambar</button>
+  
+  <div id="uploadStatus"></div>
+</section>
+
   
   <form id="formPaket">
     <div id="boxContainer"></div>
