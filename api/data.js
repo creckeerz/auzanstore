@@ -19,3 +19,5 @@ export default async function handler(req, res) {
   }
 }
 
+document.querySelector(`[name=status${i}]`).value = paket.status || 'tersedia';
+
