@@ -170,9 +170,19 @@ Mohon diproses ya.`;
               <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
               ${detailHTML}
             </div>
-            <div class="paket-link">
-  <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">Beli Sekarang</a>
+            <div class="paket-detail" style="font-weight:bold; color: ${paket.status === 'tersedia' ? '#27ae60' : 'red'};">
+  Status: ${paket.status === 'tersedia' ? 'Tersedia' : 'Kosong'}
 </div>
+${paket.status === 'tersedia' ? `
+  <div class="paket-link">
+    <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">Beli Sekarang</a>
+  </div>
+` : `
+  <div class="paket-link">
+    <a style="background-color:#ccc; cursor:not-allowed;" onclick="return false">Tidak Tersedia</a>
+  </div>
+`}
+
 <div class="paket-link">
 
 
