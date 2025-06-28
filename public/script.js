@@ -1,51 +1,57 @@
-const slides = document.getElementById('slides');
-const totalSlides = slides.children.length;
-const dotsContainer = document.getElementById('dots');
-let currentIndex = 0;
-let slideInterval;
+let currentSlide = 0;
+let images = [];
 
-// Generate dots
-for (let i = 0; i < totalSlides; i++) {
-  const dot = document.createElement('span');
-  dot.classList.add('dot');
-  dot.onclick = () => moveToSlide(i);
-  dotsContainer.appendChild(dot);
+async function loadTestimoni() {
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbzqa6eCcoOEbbGpSnxnC9Q_hMBHHX1awg1Zebv8k4ZnrZIxwH6aHp0VZk-Rvd2QAsVa/execexec?testimoni=true');
+    const data = await response.json();
+    images = data.images || [];
+
+    if (images.length === 0) {
+      document.getElementById("slideImage").src = "https://via.placeholder.com/400x300?text=Belum+ada+testimoni";
+      return;
+    }
+
+    renderSlide();
+    renderDots();
+
+  } catch (error) {
+    console.error("❌ Gagal memuat testimoni:", error);
+  }
 }
 
-function updateSlider() {
-  slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-  document.querySelectorAll('.dot').forEach((dot, i) => {
-    dot.classList.toggle('active', i === currentIndex);
-  });
+function renderSlide() {
+  const img = document.getElementById("slideImage");
+  img.src = images[currentSlide];
+  updateDots();
 }
 
 function nextSlide() {
-  currentIndex = (currentIndex + 1) % totalSlides;
-  updateSlider();
+  currentSlide = (currentSlide + 1) % images.length;
+  renderSlide();
 }
 
 function prevSlide() {
-  currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-  updateSlider();
+  currentSlide = (currentSlide - 1 + images.length) % images.length;
+  renderSlide();
 }
 
-function moveToSlide(index) {
-  currentIndex = index;
-  updateSlider();
+function renderDots() {
+  const dotsContainer = document.getElementById("dots");
+  dotsContainer.innerHTML = "";
+
+  images.forEach((_, i) => {
+    const dot = document.createElement("span");
+    dot.className = i === currentSlide ? "active" : "";
+    dotsContainer.appendChild(dot);
+  });
 }
 
-function startAutoSlide() {
-  slideInterval = setInterval(nextSlide, 4000);
+function updateDots() {
+  const dots = document.querySelectorAll("#dots span");
+  dots.forEach((dot, index) => {
+    dot.className = index === currentSlide ? "active" : "";
+  });
 }
 
-function stopAutoSlide() {
-  clearInterval(slideInterval);
-}
-
-// Start
-updateSlider();
-startAutoSlide();
-
-// Pause saat hover
-slides.parentElement.addEventListener('mouseenter', stopAutoSlide);
-slides.parentElement.addEventListener('mouseleave', startAutoSlide);
+window.onload = loadTestimoni;
