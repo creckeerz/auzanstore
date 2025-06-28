@@ -169,42 +169,47 @@ Mohon diproses ya.`;
 </script>
 
   <script>
-    fetch('/api/data')
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('paketContainer');
-        container.innerHTML = ''; // Hapus loading
+  fetch('/api/data?t=' + Date.now())
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('container-paket'); // pastikan elemen ini ada di HTML
+      container.innerHTML = ''; // kosongkan dulu
 
-        data.forEach(paket => {
-          const card = document.createElement('div');
-          card.className = 'paket-card';
+      data.forEach(paket => {
+        const card = document.createElement('div');
+        card.className = 'paket-card';
 
-          const detailHTML = paket.detail.map(line => `<div class="paket-detail">• ${line}</div>`).join('');
+        const detailHTML = (paket.detail || []).map(line => `<div class="paket-detail">• ${line}</div>`).join('');
 
-          card.innerHTML = `
-            <div>
-              <div class="paket-title">${paket.nama}</div>
-              <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
-              ${detailHTML}
-            </div>
-            <div class="paket-link">
-  <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">Beli Sekarang</a>
-</div>
-<div class="paket-link">
+        const isKosong = paket.status === 'Kosong';
+        const statusHTML = isKosong
+          ? '<div class="paket-status status-kosong">🔴 Kosong</div>'
+          : '<div class="paket-status status-tersedia">🟢 Tersedia</div>';
 
+        card.innerHTML = `
+          <div>
+            <div class="paket-title">${paket.nama}</div>
+            <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
+            ${detailHTML}
+            ${statusHTML}
+          </div>
+          <div class="paket-link">
+            <a href="${paket.link || '#'}" target="_blank">Beli Sekarang</a>
+          </div>
+        `;
 
-          `;
-
-
-
-          container.appendChild(card);
-        });
-      })
-      .catch(err => {
-        console.error('Gagal memuat data:', err);
-        document.getElementById('paketContainer').innerHTML = '<p class="loading">Gagal memuat data paket.</p>';
+        container.appendChild(card);
       });
-  </script>
+    })
+    .catch(err => {
+      console.error('Gagal memuat data:', err);
+      const container = document.getElementById('container-paket'); // pastikan elemen ini ada juga
+      if(container) {
+        container.innerHTML = '<p class="loading">Gagal memuat data paket.</p>';
+      }
+    });
+</script>
+
 <script>
   window.addEventListener('DOMContentLoaded', () => {
     fetch('https://script.google.com/macros/s/AKfycbztVhLkhGqEZwRf9CvKYh_gOYTP9KBKyz9q6D2jmiJkQY-bp5KlimSqkc10wnIO6mZn/exec?maintenance=true')
@@ -224,6 +229,7 @@ Mohon diproses ya.`;
       .catch(console.error);
   });
 </script>
+
 
 </body>
 </html>
