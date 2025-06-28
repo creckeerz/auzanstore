@@ -207,7 +207,9 @@ document.getElementById('formPaket').addEventListener('submit', function (e) {
     const harga = document.querySelector(`[name=harga${i}]`).value.trim();
     const detail = document.querySelector(`[name=detail${i}]`).value.trim().split('\n').filter(x => x);
     const link = document.querySelector(`[name=link${i}]`).value.trim();
-    const status = document.querySelector(`.status-btn[data-index="${i}"]`)?.textContent?.trim() || "Tersedia"; // ✅ FIX
+    const statusBtn = document.querySelector(`.status-btn[data-index="${i}"]`);
+const status = statusBtn && (statusBtn.textContent || "").trim() || "Tersedia";
+
 
     if (nama !== '') {
       data.push({ nama, harga, detail, link, status }); // ✅ pastikan `status` dikirim
