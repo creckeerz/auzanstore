@@ -1,30 +1,32 @@
 export default async function handler(req, res) {
-  const url = 'https://script.google.com/macros/s/AKfycbwC_ArGcfNNIp1jlE-jdU7GOVfFz7EoWmqG255UJ2lNQ2l4SD3qwAOEXZjGfLKjI13H/exec';
+  const baseUrl = 'https://script.google.com/macros/s/AKfycbwC_ArGcfNNIp1jlE-jdU7GOVfFz7EoWmqG255UJ2lNQ2l4SD3qwAOEXZjGfLKjI13H/exec';
 
   try {
     if (req.method === 'GET') {
-      const response = await fetch(`${url}?mode=status`);
+      const response = await fetch(`${baseUrl}?mode=status`);
       const status = await response.text();
-      return res.status(200).send(status.trim());
+
+      res.setHeader('Cache-Control', 'no-store');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return res.status(200).send(status);
     }
 
     if (req.method === 'POST') {
-      const body = await req.text();
-      if (body === 'maintenance' || body === 'normal') {
-        await fetch(`${url}?mode=update`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body
-        });
-        return res.status(200).send('✅ Status diperbarui');
-      } else {
-        return res.status(400).send('❌ Status tidak valid');
-      }
+      const response = await fetch(`${baseUrl}?mode=update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: req.body, // 'maintenance' atau 'normal'
+      });
+
+      const result = await response.text();
+      res.setHeader('Cache-Control', 'no-store');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return res.status(200).send(result);
     }
 
-    res.status(405).send('Method Not Allowed');
-  } catch (error) {
-    console.error('Gagal menghubungi Google Script:', error);
-    res.status(500).send('error');
+    return res.status(405).end('Method Not Allowed');
+  } catch (err) {
+    console.error('❌ Proxy status error:', err);
+    res.status(500).send('❌ Gagal memproses status');
   }
 }
