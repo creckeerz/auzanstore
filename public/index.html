@@ -6,6 +6,28 @@
   <title>Auzan Store - Paket Internet XL / AXIS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  background-color: #25d366;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+}
+
+.whatsapp-float img {
+  width: 40px;
+  height: 40px;
+}
+    
     :root {
       --primary: #4b6cb7;
       --secondary: #182848;
@@ -228,6 +250,10 @@ Mohon diproses ya.`;
       .catch(console.error);
   });
 </script>
-
+<!-- Tombol WhatsApp Mengambang -->
+<a href="https://chat.whatsapp.com/Gyq554Eza647Ydpw5ss32i" 
+   class="whatsapp-float" target="_blank" aria-label="Gabung Grup WhatsApp">
+  <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" />
+</a>
 </body>
 </html>
