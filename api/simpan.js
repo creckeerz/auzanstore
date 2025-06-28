@@ -1,5 +1,7 @@
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
+  if (req.method !== 'POST') {
+    return res.status(405).end('Method Not Allowed');
+  }
 
   try {
     const response = await fetch(
@@ -13,12 +15,11 @@ export default async function handler(req, res) {
 
     const result = await response.text();
 
-    // Agar tidak cache
     res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Optional
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.status(200).send(result);
   } catch (error) {
-    console.error('Proxy Error:', error);
+    console.error('❌ Proxy simpan error:', error);
     res.status(500).send('❌ Gagal proxy ke Google Script');
   }
 }
