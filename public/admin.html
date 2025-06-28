@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -12,25 +13,21 @@
       background: #f4f6f9;
       margin: 0;
     }
-
     h2 {
       text-align: center;
       color: #2c3e50;
       margin-bottom: 20px;
     }
-
     .paket-select {
       margin: 0 auto 30px;
       text-align: center;
     }
-
     select {
       font-size: 16px;
       padding: 8px 12px;
       border-radius: 8px;
       border: 1px solid #ccc;
     }
-
     .paket-form {
       background: #fff;
       border-radius: 10px;
@@ -39,15 +36,12 @@
       margin-bottom: 20px;
       display: none;
     }
-
     label {
       display: block;
       margin-top: 10px;
       font-weight: bold;
     }
-
-    input[type="text"],
-    textarea {
+    input[type="text"], textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -55,11 +49,9 @@
       margin-top: 5px;
       font-size: 14px;
     }
-
     textarea {
       resize: vertical;
     }
-
     button {
       background-color: #4b6cb7;
       color: #fff;
@@ -71,23 +63,19 @@
       display: block;
       margin: 30px auto 0;
     }
-
     button:hover {
       background-color: #3a549d;
     }
   </style>
 </head>
 <body>
-
   <h2>Panel Admin - AUZAN STORE</h2>
-
   <div class="paket-select">
     <label for="selectPaket">Pilih Paket:</label>
     <select id="selectPaket">
       <option value="">-- Pilih Paket --</option>
     </select>
   </div>
-
   <form id="formPaket">
     <div id="boxContainer"></div>
     <button type="submit">💾 Simpan Semua Paket</button>
@@ -132,6 +120,22 @@
       }
     });
 
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        data.forEach((paket, i) => {
+          if (i < boxCount) {
+            document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
+            document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
+            document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
+            document.querySelector(`[name=link${i}]`).value = paket.link || '';
+          }
+        });
+      })
+      .catch(err => {
+        console.error('Gagal memuat data:', err);
+      });
+
     document.getElementById('formPaket').addEventListener('submit', function (e) {
       e.preventDefault();
       const data = [];
@@ -144,12 +148,10 @@
           data.push({ nama, harga, detail, link });
         }
       }
-
       if (data.length === 0) {
         alert("Isi minimal 1 paket sebelum menyimpan.");
         return;
       }
-
       fetch('/api/simpan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -160,11 +162,10 @@
         alert(result || 'Berhasil simpan ke Google Sheet');
       })
       .catch(err => {
-        alert('❌ Gagal menyimpan ke Google Sheet');
+        alert('Gagal menyimpan ke Google Sheet');
         console.error(err);
       });
     });
   </script>
-
 </body>
 </html>
