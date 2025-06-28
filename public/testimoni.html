@@ -140,12 +140,7 @@
           return;
         }
 
-        data.images.forEach((imgValue, index) => {
-          // Cek apakah sudah berupa URL atau hanya ID
-          const url = imgValue.includes("http")
-            ? imgValue
-            : `https://drive.google.com/uc?export=view&id=${imgValue}`;
-
+        data.images.forEach((url, index) => {
           const img = document.createElement("img");
           img.src = url;
           img.alt = "Testimoni " + (index + 1);
@@ -158,14 +153,9 @@
         });
 
         showSlide(0);
-      })
-      .catch(err => {
-        console.error("Gagal memuat testimoni:", err);
-        document.getElementById("slides").innerHTML = "<p>Gagal memuat testimoni.</p>";
       });
 
     let currentIndex = 0;
-
     function showSlide(index) {
       const slides = document.querySelectorAll("#slides img");
       const dots = document.querySelectorAll(".dot");
