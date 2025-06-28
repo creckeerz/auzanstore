@@ -1,3 +1,66 @@
+/* Admin Dashboard — Auzan Store Theme */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background-color: #f5f7fb;
+  color: #333;
+}
+
+h2, h3 {
+  color: #182848;
+}
+
+/* Kontainer utama */
+.admin-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Input select dan tombol */
+select, button {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 8px 12px;
+  margin-right: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Tombol utama */
+button.primary {
+  background-color: #4b6cb7;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button.primary:hover {
+  background-color: #3a549d;
+}
+
+/* Toggle maintenance */
+.toggle-group {
+  display: inline-flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Info note */
+.notice {
+  margin-top: 16px;
+  padding: 12px;
+  background: #e8f0fe;
+  color: #182848;
+  border-left: 4px solid #4b6cb7;
+}
+
+
+
 /* Umum */
 body {
   font-family: 'Poppins', sans-serif;
