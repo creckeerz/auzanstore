@@ -1,57 +1,60 @@
-let currentSlide = 0;
-let images = [];
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbzqa6eCcoOEbbGpSnxnC9Q_hMBHHX1awg1Zebv8k4ZnrZIxwH6aHp0VZk-Rvd2QAsVa/exec?testimoni=true";
 
-async function loadTestimoni() {
-  try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbzqa6eCcoOEbbGpSnxnC9Q_hMBHHX1awg1Zebv8k4ZnrZIxwH6aHp0VZk-Rvd2QAsVa/exec?testimoni=true');
-    const data = await response.json();
-    images = data.images || [];
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(data => {
+      const slidesContainer = document.getElementById("slides");
+      const dotsContainer = document.getElementById("dots");
 
-    if (images.length === 0) {
-      document.getElementById("slideImage").src = "https://via.placeholder.com/400x300?text=Belum+ada+testimoni";
-      return;
-    }
+      if (!data.images || data.images.length === 0) {
+        slidesContainer.innerHTML = "<p>Belum ada testimoni tersedia.</p>";
+        return;
+      }
 
-    renderSlide();
-    renderDots();
+      data.images.forEach((url, index) => {
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = "Testimoni " + (index + 1);
+        img.style.display = "none"; // Awalnya disembunyikan semua
+        slidesContainer.appendChild(img);
 
-  } catch (error) {
-    console.error("❌ Gagal memuat testimoni:", error);
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        dot.onclick = () => showSlide(index);
+        dotsContainer.appendChild(dot);
+      });
+
+      showSlide(0); // Tampilkan gambar pertama
+    })
+    .catch(err => {
+      console.error("❌ Gagal memuat testimoni:", err);
+    });
+
+  let currentIndex = 0;
+
+  function showSlide(index) {
+    const slides = document.querySelectorAll("#slides img");
+    const dots = document.querySelectorAll(".dot");
+
+    slides.forEach((img, i) => {
+      img.style.display = i === index ? "block" : "none";
+    });
+
+    dots.forEach((d, i) => {
+      d.style.background = i === index ? "#333" : "#bbb";
+    });
+
+    currentIndex = index;
   }
-}
 
-function renderSlide() {
-  const img = document.getElementById("slideImage");
-  img.src = images[currentSlide];
-  updateDots();
-}
+  function nextSlide() {
+    const total = document.querySelectorAll("#slides img").length;
+    showSlide((currentIndex + 1) % total);
+  }
 
-function nextSlide() {
-  currentSlide = (currentSlide + 1) % images.length;
-  renderSlide();
-}
-
-function prevSlide() {
-  currentSlide = (currentSlide - 1 + images.length) % images.length;
-  renderSlide();
-}
-
-function renderDots() {
-  const dotsContainer = document.getElementById("dots");
-  dotsContainer.innerHTML = "";
-
-  images.forEach((_, i) => {
-    const dot = document.createElement("span");
-    dot.className = i === currentSlide ? "active" : "";
-    dotsContainer.appendChild(dot);
-  });
-}
-
-function updateDots() {
-  const dots = document.querySelectorAll("#dots span");
-  dots.forEach((dot, index) => {
-    dot.className = index === currentSlide ? "active" : "";
-  });
-}
-
-window.onload = loadTestimoni;
+  function prevSlide() {
+    const total = document.querySelectorAll("#slides img").length;
+    showSlide((currentIndex - 1 + total) % total);
+  }
+</script>
