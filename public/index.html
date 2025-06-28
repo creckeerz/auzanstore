@@ -125,17 +125,18 @@
   <footer>
     &copy; 2025 Auzan Store. Powered by XL / AXIS AKRAB.
   </footer>
-
 <script>
-  function formatRupiah(angka) {
-    const num = parseInt(angka.toString().replace(/[^\d]/g, ''));
-    if (isNaN(num)) return angka;
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
-
+function formatRupiah(angka) {
+  const num = parseInt(angka.toString().replace(/[^\d]/g, '')); // bersihkan
+  if (isNaN(num)) return angka; // fallback jika bukan angka
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+</script>
+  
+<script>
   function generatePesan(paket) {
-    const detailText = paket.detail.map(line => `- ${line}`).join('\n');
-    const pesan = 
+  const detailText = paket.detail.map(line => `- ${line}`).join('\n');
+  const pesan = 
 `Halo Admin Auzan Store,
 Saya ingin beli paket berikut:
 
@@ -145,55 +146,48 @@ Saya ingin beli paket berikut:
 ${detailText}
 
 Mohon diproses ya.`;
-    return encodeURIComponent(pesan);
-  }
+  return encodeURIComponent(pesan);
+}
 
-  // GANTI INI DENGAN URL Web App Google Script kamu
-  const baseURL = 'https://script.google.com/macros/s/AKfycbwC_ArGcfNNIp1jlE-jdU7GOVfFz7EoWmqG255UJ2lNQ2l4SD3qwAOEXZjGfLKjI13H/exec';
-
-  fetch(baseURL + '?mode=status')
-    .then(res => res.text())
-    .then(status => {
-      if (status === 'maintenance') {
-        document.getElementById('paketContainer').innerHTML = `
-          <div class="loading">🔧 Web sedang proses update kuota internet. Silakan cek kembali nanti.</div>`;
-      } else {
-        fetch(baseURL)
-          .then(res => res.json())
-          .then(data => {
-            const container = document.getElementById('paketContainer');
-            container.innerHTML = '';
-
-            data.forEach(paket => {
-              const card = document.createElement('div');
-              card.className = 'paket-card';
-              const detailHTML = paket.detail.map(line => `<div class="paket-detail">• ${line}</div>`).join('');
-              card.innerHTML = `
-                <div>
-                  <div class="paket-title">${paket.nama}</div>
-                  <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
-                  ${detailHTML}
-                </div>
-                <div class="paket-link">
-                  <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">
-                    📲 Beli Sekarang via WhatsApp
-                  </a>
-                </div>
-              `;
-              container.appendChild(card);
-            });
-          })
-          .catch(() => {
-            document.getElementById('paketContainer').innerHTML = `
-              <div class="loading">❌ Gagal memuat data paket.</div>`;
-          });
-      }
-    })
-    .catch(() => {
-      document.getElementById('paketContainer').innerHTML = `
-        <div class="loading">❌ Gagal memuat status web</div>`;
-    });
 </script>
+
+  <script>
+    fetch('/api/data')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('paketContainer');
+        container.innerHTML = ''; // Hapus loading
+
+        data.forEach(paket => {
+          const card = document.createElement('div');
+          card.className = 'paket-card';
+
+          const detailHTML = paket.detail.map(line => `<div class="paket-detail">• ${line}</div>`).join('');
+
+          card.innerHTML = `
+            <div>
+              <div class="paket-title">${paket.nama}</div>
+              <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
+              ${detailHTML}
+            </div>
+            <div class="paket-link">
+  <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">Beli Sekarang</a>
+</div>
+<div class="paket-link">
+
+
+          `;
+
+
+
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error('Gagal memuat data:', err);
+        document.getElementById('paketContainer').innerHTML = '<p class="loading">Gagal memuat data paket.</p>';
+      });
+  </script>
 
 </body>
 </html>
