@@ -167,5 +167,31 @@
       });
     });
   </script>
+<div style="text-align:center; margin-top: 40px;">
+  <h3>Status Maintenance Website</h3>
+  <button onclick="setMaintenance(true)" style="background-color:orangered">Aktifkan Maintenance</button>
+  <button onclick="setMaintenance(false)" style="background-color:green">Nonaktifkan Maintenance</button>
+</div>
+
+<script>
+  function setMaintenance(active) {
+    const status = active ? "maintenance" : "normal";
+    fetch("https://script.google.com/macros/s/AKfycbztVhLkhGqEZwRf9CvKYh_gOYTP9KBKyz9q6D2jmiJkQY-bp5KlimSqkc10wnIO6mZn/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status })
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert("✅ Status diubah menjadi: " + data.status);
+    })
+    .catch(err => {
+      alert("❌ Gagal mengubah status");
+      console.error(err);
+    });
+  }
+</script>
+
+  
 </body>
 </html>
