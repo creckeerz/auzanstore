@@ -5,11 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Testimoni Pelanggan - Auzan Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f7fb;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px 10px;
+      background-color: #4b6cb7;
+      color: #fff;
+    }
+
+    header h1 {
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-weight: 400;
+    }
+
+    .testimoni-button {
+      padding: 10px 20px;
+    }
+
+    .testimoni-button a {
+      text-decoration: none;
+      background-color: #4b6cb7;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .slider {
+      position: relative;
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .slides img {
+      width: 100%;
+      max-height: 380px;
+      object-fit: contain;
+      display: none;
+      border-radius: 10px;
+    }
+
+    .nav {
+      margin-top: 15px;
+    }
+
+    .nav button {
+      background-color: #4b6cb7;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      margin: 0 6px;
+      font-size: 18px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .dots {
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin: 4px;
+      background-color: #bbb;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #182848;
+      color: white;
+      margin-top: 40px;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Tombol kembali ke beranda -->
   <div class="testimoni-button">
     <a href="../index.html">← Kembali ke Beranda</a>
   </div>
@@ -21,12 +113,7 @@
 
   <section id="testimoni">
     <div class="slider">
-      <div class="slides" id="slides">
-        <!-- Ganti src dengan gambar asli testimoni -->
-        <img src="https://miro.medium.com/v2/resize:fit:880/1*GIQ-UuBj8sotwryX8DIWhg.png" alt="Testimoni 1">
-        <img src="https://miro.medium.com/v2/resize:fit:880/1*GIQ-UuBj8sotwryX8DIWhg.png" alt="Testimoni 2">
-        <img src="https://miro.medium.com/v2/resize:fit:880/1*GIQ-UuBj8sotwryX8DIWhg.png" alt="Testimoni 3">
-      </div>
+      <div class="slides" id="slides"></div>
       <div class="nav">
         <button onclick="prevSlide()">❮</button>
         <button onclick="nextSlide()">❯</button>
@@ -39,6 +126,61 @@
     &copy; 2025 Auzan Store. Powered by XL / AXIS AKRAB.
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxYlolbrJEjxK8N1kQl-UIzmSI4TdlZ4LKLCgr2Kl9BpaQPw4pK8zs-JqoVdJxFQ1Ml/exec/exec?testimoni=true";
+
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        const slidesContainer = document.getElementById("slides");
+        const dotsContainer = document.getElementById("dots");
+
+        if (!data.images || data.images.length === 0) {
+          slidesContainer.innerHTML = "<p>Belum ada testimoni tersedia.</p>";
+          return;
+        }
+
+        data.images.forEach((url, index) => {
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = "Testimoni " + (index + 1);
+          slidesContainer.appendChild(img);
+
+          const dot = document.createElement("span");
+          dot.className = "dot";
+          dot.onclick = () => showSlide(index);
+          dotsContainer.appendChild(dot);
+        });
+
+        showSlide(0);
+      });
+
+    let currentIndex = 0;
+    function showSlide(index) {
+      const slides = document.querySelectorAll("#slides img");
+      const dots = document.querySelectorAll(".dot");
+
+      slides.forEach((img, i) => {
+        img.style.display = i === index ? "block" : "none";
+      });
+
+      dots.forEach((d, i) => {
+        d.style.background = i === index ? "#333" : "#bbb";
+      });
+
+      currentIndex = index;
+    }
+
+    function nextSlide() {
+      const total = document.querySelectorAll("#slides img").length;
+      showSlide((currentIndex + 1) % total);
+    }
+
+    function prevSlide() {
+      const total = document.querySelectorAll("#slides img").length;
+      showSlide((currentIndex - 1 + total) % total);
+    }
+  </script>
+
 </body>
 </html>
