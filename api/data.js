@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   try {
     const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbzsAFeQhl1ApAuzYDHFInCerEyY8FxLgfBOjSeu2sswqKWZpoZcHqq7iSy7XTCRCesq/exec',
+      'https://script.google.com/macros/s/AKfycbxanA6mhzOwGiZ5kmcMxw5kLQD8w9DScbbQSs89W3SZKmF65_kbiaEiPfVFhb5WqxfE/exec',
       {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
