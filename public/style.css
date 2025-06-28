@@ -26,14 +26,14 @@ header p {
 /* Tombol testimoni pojok kanan */
 .testimoni-button {
   position: absolute;
-  top: 20px;
+  top: 15px;
   right: 20px;
 }
 
 .testimoni-button a {
   background-color: #4b6cb7;
   color: #fff;
-  padding: 8px 16px;
+  padding: 7px 16px;
   border-radius: 8px;
   text-decoration: none;
   font-size: 14px;
