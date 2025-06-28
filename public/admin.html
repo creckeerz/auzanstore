@@ -177,15 +177,14 @@
   function setMaintenance(active) {
     const status = active ? "maintenance" : "normal";
 
-    // GANTI baris fetch ini:
-    fetch("https://script.google.com/macros/s/AKfycbztVhLkhGqEZwRf9CvKYh_gOYTP9KBKyz9q6D2jmiJkQY-bp5KlimSqkc10wnIO6mZn/exec", {
+    fetch("/api/maintenance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status })
     })
     .then(res => res.json())
     .then(data => {
-      alert("✅ Status diubah menjadi: " + data.status);
+      alert("✅ Status diubah menjadi: " + status);
     })
     .catch(err => {
       alert("❌ Gagal mengubah status:\n" + err);
@@ -193,6 +192,7 @@
     });
   }
 </script>
+
 
 
   
