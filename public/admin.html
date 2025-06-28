@@ -134,22 +134,60 @@ Masa Aktif: 30 Hari"></textarea>
       boxContainer.appendChild(box);
     }
 
-    // Pasang event listener tombol status (hanya sekali)
     function attachStatusBtnListeners() {
-      const statusButtons = document.querySelectorAll('.status-btn');
-      statusButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (btn.textContent === "Tersedia") {
-            btn.textContent = "Kosong";
-            btn.classList.add("kosong");
-          } else {
+  const statusButtons = document.querySelectorAll('.status-btn');
+  statusButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = parseInt(btn.dataset.index);
+      let newStatus;
+
+      if (btn.textContent === "Tersedia") {
+        newStatus = "Kosong";
+        btn.textContent = newStatus;
+        btn.classList.add("kosong");
+      } else {
+        newStatus = "Tersedia";
+        btn.textContent = newStatus;
+        btn.classList.remove("kosong");
+      }
+
+      // Kirim update status ke API
+      fetch('/api/updateStatus', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ index: i, status: newStatus })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.success) {
+          alert('Gagal update status ke server.');
+          // rollback perubahan UI jika gagal
+          if (newStatus === "Kosong") {
             btn.textContent = "Tersedia";
             btn.classList.remove("kosong");
+          } else {
+            btn.textContent = "Kosong";
+            btn.classList.add("kosong");
           }
-        });
+        }
+      })
+      .catch(() => {
+        alert('Gagal menghubungi server.');
+        // rollback perubahan UI jika gagal
+        if (newStatus === "Kosong") {
+          btn.textContent = "Tersedia";
+          btn.classList.remove("kosong");
+        } else {
+          btn.textContent = "Kosong";
+          btn.classList.add("kosong");
+        }
       });
-    }
-    attachStatusBtnListeners();
+    });
+  });
+}
+
+attachStatusBtnListeners();
+
 
     // Tampilkan form paket sesuai pilihan
     selectPaket.addEventListener('change', () => {
