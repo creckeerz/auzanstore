@@ -299,31 +299,41 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 });
 
 function uploadImage() {
-  const img = document.getElementById('preview').src;
-  if (!img) {
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
+  if (!file) {
     alert('Pilih gambar terlebih dahulu!');
     return;
   }
 
-  document.getElementById('uploadStatus').innerText = '⏳ Mengupload...';
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const base64Image = e.target.result;
+    const formData = new FormData();
+    formData.append("image", base64Image);
 
-  fetch(UPLOAD_URL, {
-    method: "POST",
-    body: JSON.stringify({ image: img }),
-    headers: { "Content-Type": "application/json" }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      document.getElementById('uploadStatus').innerHTML = `✅ Berhasil upload. <a href="${data.url}" target="_blank">Lihat Gambar</a>`;
-      document.getElementById('preview').style.display = 'none';
-    } else {
-      document.getElementById('uploadStatus').innerText = "❌ Gagal upload: " + data.message;
-    }
-  })
-  .catch(err => {
-    document.getElementById('uploadStatus').innerText = "❌ Terjadi kesalahan: " + err;
-  });
+    document.getElementById('uploadStatus').innerText = '⏳ Mengupload...';
+
+    fetch("https://script.google.com/macros/s/AKfycbwbq0RkkCOQHCWui_lfbmwoYgcMnbqLfK5wzVwlXqGZgXgyZfLjog9kOfhA9oGVLlFI/exec", {
+      method: "POST",
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('uploadStatus').innerHTML = `✅ Berhasil upload. <a href="${data.url}" target="_blank">Lihat Gambar</a>`;
+          document.getElementById('preview').style.display = 'none';
+        } else {
+          document.getElementById('uploadStatus').innerText = "❌ Gagal upload: " + data.message;
+        }
+      })
+      .catch(err => {
+        document.getElementById('uploadStatus').innerText = "❌ Error: " + err;
+        console.error(err);
+      });
+  };
+
+  reader.readAsDataURL(file);
 }
 </script>
 
