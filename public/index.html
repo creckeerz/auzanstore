@@ -188,6 +188,25 @@ Mohon diproses ya.`;
         document.getElementById('paketContainer').innerHTML = '<p class="loading">Gagal memuat data paket.</p>';
       });
   </script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/status')
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "maintenance") {
+          document.body.innerHTML = `
+            <div style="display:flex;justify-content:center;align-items:center;height:100vh;text-align:center;font-family:sans-serif;">
+              <div>
+                <h1>🚧 Website Sedang Dalam Perbaikan</h1>
+                <p>Mohon maaf atas ketidaknyamanannya.<br>Silakan kembali lagi nanti.</p>
+              </div>
+            </div>
+          `;
+        }
+      })
+      .catch(console.error);
+  });
+</script>
 
 </body>
 </html>
