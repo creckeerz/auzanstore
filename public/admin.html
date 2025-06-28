@@ -104,6 +104,7 @@
     const boxContainer = document.getElementById('boxContainer');
     const selectPaket = document.getElementById('selectPaket');
 
+    // Buat opsi paket di select dropdown
     for (let i = 0; i < boxCount; i++) {
       const option = document.createElement('option');
       option.value = i;
@@ -111,6 +112,7 @@
       selectPaket.appendChild(option);
     }
 
+    // Buat form paket (box) secara dinamis
     for (let i = 0; i < boxCount; i++) {
       const box = document.createElement('div');
       box.className = 'paket-form';
@@ -132,6 +134,24 @@ Masa Aktif: 30 Hari"></textarea>
       boxContainer.appendChild(box);
     }
 
+    // Pasang event listener tombol status (hanya sekali)
+    function attachStatusBtnListeners() {
+      const statusButtons = document.querySelectorAll('.status-btn');
+      statusButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.textContent === "Tersedia") {
+            btn.textContent = "Kosong";
+            btn.classList.add("kosong");
+          } else {
+            btn.textContent = "Tersedia";
+            btn.classList.remove("kosong");
+          }
+        });
+      });
+    }
+    attachStatusBtnListeners();
+
+    // Tampilkan form paket sesuai pilihan
     selectPaket.addEventListener('change', () => {
       for (let i = 0; i < boxCount; i++) {
         document.getElementById(`paket${i}`).style.display = 'none';
@@ -142,48 +162,34 @@ Masa Aktif: 30 Hari"></textarea>
       }
     });
 
+    // Load data paket dari API dan isi form
     fetch('/api/data?t=' + Date.now())
-  .then(res => res.json())
-  .then(data => {
-    data.forEach((paket, i) => {
-      if (i < boxCount) {
-        document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
-        document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
-        document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
-        document.querySelector(`[name=link${i}]`).value = paket.link || '';
-        const statusBtn = document.querySelector(`.status-btn[data-index="${i}"]`);
-        if (statusBtn) {
-          if (paket.status === "Kosong") {
-            statusBtn.textContent = "Kosong";
-            statusBtn.classList.add("kosong");
-          } else {
-            statusBtn.textContent = "Tersedia";
-            statusBtn.classList.remove("kosong");
+      .then(res => res.json())
+      .then(data => {
+        data.forEach((paket, i) => {
+          if (i < boxCount) {
+            document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
+            document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
+            document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
+            document.querySelector(`[name=link${i}]`).value = paket.link || '';
+            const statusBtn = document.querySelector(`.status-btn[data-index="${i}"]`);
+            if (statusBtn) {
+              if (paket.status === "Kosong") {
+                statusBtn.textContent = "Kosong";
+                statusBtn.classList.add("kosong");
+              } else {
+                statusBtn.textContent = "Tersedia";
+                statusBtn.classList.remove("kosong");
+              }
+            }
           }
-        }
-      }
-    });
-  })
-  .catch(err => {
-    console.error('Gagal memuat data:', err);
-  });
+        });
+      })
+      .catch(err => {
+        console.error('Gagal memuat data:', err);
+      });
 
-setTimeout(() => {
-  const statusButtons = document.querySelectorAll('.status-btn');
-  statusButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (btn.textContent === "Tersedia") {
-        btn.textContent = "Kosong";
-        btn.classList.add("kosong");
-      } else {
-        btn.textContent = "Tersedia";
-        btn.classList.remove("kosong");
-      }
-    });
-  });
-}, 500);
-
-
+    // Submit simpan semua paket ke API
     document.getElementById('formPaket').addEventListener('submit', function (e) {
       e.preventDefault();
       const data = [];
@@ -216,21 +222,7 @@ setTimeout(() => {
       });
     });
 
-    setTimeout(() => {
-      const statusButtons = document.querySelectorAll('.status-btn');
-      statusButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (btn.textContent === "Tersedia") {
-            btn.textContent = "Kosong";
-            btn.classList.add("kosong");
-          } else {
-            btn.textContent = "Tersedia";
-            btn.classList.remove("kosong");
-          }
-        });
-      });
-    }, 500);
-
+    // Fungsi untuk set status maintenance
     function setMaintenance(active) {
       const status = active ? "maintenance" : "normal";
       fetch("/api/maintenance", {
