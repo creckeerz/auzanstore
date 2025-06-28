@@ -3,17 +3,18 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbzztZQuzF8BrXzYmzS7Cebm0CO54j4MLr7-_iD40RsRx3W1yv-jWbVr37RGqRRGLE3p/exec',
+      'https://script.google.com/macros/s/AKfycbwZqmS9HQsUAspgiz_R2b5KgJ5vmcIsnhtQ_n8IAMInRH2Z5Ky_zWFXe77xA6AORAJ5/exec',
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(req.body)
       }
     );
 
     const text = await response.text();
 
-    // 🔒 Mencegah cache
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
