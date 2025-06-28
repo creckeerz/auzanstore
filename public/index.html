@@ -170,44 +170,44 @@ Mohon diproses ya.`;
 
   <script>
   fetch('/api/data?t=' + Date.now())
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById('container-paket'); // pastikan elemen ini ada di HTML
-      container.innerHTML = ''; // kosongkan dulu
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById('paketContainer'); // samakan id
+    container.innerHTML = ''; // kosongkan dulu
 
-      data.forEach(paket => {
-        const card = document.createElement('div');
-        card.className = 'paket-card';
+    data.forEach(paket => {
+      const card = document.createElement('div');
+      card.className = 'paket-card';
 
-        const detailHTML = (paket.detail || []).map(line => `<div class="paket-detail">• ${line}</div>`).join('');
+      const detailHTML = (paket.detail || []).map(line => `<div class="paket-detail">• ${line}</div>`).join('');
 
-        const isKosong = paket.status === 'Kosong';
-        const statusHTML = isKosong
-          ? '<div class="paket-status status-kosong">🔴 Kosong</div>'
-          : '<div class="paket-status status-tersedia">🟢 Tersedia</div>';
+      const isKosong = paket.status === 'Kosong';
+      const statusHTML = isKosong
+        ? '<div class="paket-status status-kosong">🔴 Kosong</div>'
+        : '<div class="paket-status status-tersedia">🟢 Tersedia</div>';
 
-        card.innerHTML = `
-          <div>
-            <div class="paket-title">${paket.nama}</div>
-            <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
-            ${detailHTML}
-            ${statusHTML}
-          </div>
-          <div class="paket-link">
-            <a href="${paket.link || '#'}" target="_blank">Beli Sekarang</a>
-          </div>
-        `;
+      card.innerHTML = `
+        <div>
+          <div class="paket-title">${paket.nama}</div>
+          <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
+          ${detailHTML}
+          ${statusHTML}
+        </div>
+        <div class="paket-link">
+          <a href="${paket.link || '#'}" target="_blank">Beli Sekarang</a>
+        </div>
+      `;
 
-        container.appendChild(card);
-      });
-    })
-    .catch(err => {
-      console.error('Gagal memuat data:', err);
-      const container = document.getElementById('container-paket'); // pastikan elemen ini ada juga
-      if(container) {
-        container.innerHTML = '<p class="loading">Gagal memuat data paket.</p>';
-      }
+      container.appendChild(card);
     });
+  })
+  .catch(err => {
+    console.error('Gagal memuat data:', err);
+    const container = document.getElementById('paketContainer');
+    if(container) {
+      container.innerHTML = '<p class="loading">Gagal memuat data paket.</p>';
+    }
+  });
 </script>
 
 <script>
@@ -229,7 +229,6 @@ Mohon diproses ya.`;
       .catch(console.error);
   });
 </script>
-
 
 </body>
 </html>
