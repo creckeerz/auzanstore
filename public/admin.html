@@ -155,18 +155,18 @@
       }
       if (data.length === 0) return alert("Isi minimal 1 paket sebelum menyimpan.");
       
-      fetch(scriptURL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
+      fetch('/api/simpan', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(data)
+})
   .then(res => res.text())
   .then(result => alert(result))
   .catch(err => {
     alert('❌ Gagal menyimpan ke Google Sheet');
     console.error(err);
   });
-});
+
 
     // Toggle Maintenance
     const maintenanceBtn = document.getElementById('toggleMaintenance');
