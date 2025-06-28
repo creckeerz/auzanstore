@@ -3,7 +3,7 @@ let images = [];
 
 async function loadTestimoni() {
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbzqa6eCcoOEbbGpSnxnC9Q_hMBHHX1awg1Zebv8k4ZnrZIxwH6aHp0VZk-Rvd2QAsVa/execexec?testimoni=true');
+    const response = await fetch('https://script.google.com/macros/s/AKfycbzqa6eCcoOEbbGpSnxnC9Q_hMBHHX1awg1Zebv8k4ZnrZIxwH6aHp0VZk-Rvd2QAsVa/exec?testimoni=true');
     const data = await response.json();
     images = data.images || [];
 
