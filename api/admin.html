@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - Auzan Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+      background: #f4f6f9;
+      margin: 0;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .paket-select {
+      margin: 0 auto 30px;
+      text-align: center;
+    }
+    select {
+      font-size: 16px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .paket-form {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+    textarea {
+      resize: vertical;
+    }
+    button {
+      background-color: #4b6cb7;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      display: block;
+      margin: 30px auto 0;
+    }
+    button:hover {
+      background-color: #3a549d;
+    }
+    .status-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      color: white;
+      background-color: green;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .status-btn.kosong {
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <h2>Panel Admin - AUZAN STORE</h2>
+  <div class="paket-select">
+    <label for="selectPaket">Pilih Paket:</label>
+    <select id="selectPaket">
+      <option value="">-- Pilih Paket --</option>
+    </select>
+  </div>
+  <form id="formPaket">
+    <div id="boxContainer"></div>
+    <button type="submit">💾 Simpan Semua Paket</button>
+  </form>
+
+  <div style="text-align:center; margin-top: 40px;">
+    <h3>Status Maintenance Website</h3>
+    <button onclick="setMaintenance(true)" style="background-color:orangered">Aktifkan Maintenance</button>
+    <button onclick="setMaintenance(false)" style="background-color:green">Nonaktifkan Maintenance</button>
+  </div>
+
+  <script>
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbylltwQj18se4csFR1cHFSPaQEen_JZzAPedsFn31SWYa-QRsGNakFoRIYYCYl1IyPy/exec";
+    const boxCount = 8;
+    const boxContainer = document.getElementById('boxContainer');
+    const selectPaket = document.getElementById('selectPaket');
+
+    for (let i = 0; i < boxCount; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = `Paket #${i + 1}`;
+      selectPaket.appendChild(option);
+    }
+
+    for (let i = 0; i < boxCount; i++) {
+      const box = document.createElement('div');
+      box.className = 'paket-form';
+      box.id = `paket${i}`;
+      box.innerHTML = `
+        <label>Status:</label>
+        <button type="button" class="status-btn" data-index="${i}">Tersedia</button>
+        <label>Nama Paket:</label>
+        <input type="text" name="nama${i}" placeholder="Contoh: AKRAB 10GB" />
+        <label>Harga:</label>
+        <input type="text" name="harga${i}" placeholder="Contoh: 25.000" />
+        <label>Detail (Pisahkan baris dengan Enter):</label>
+        <textarea name="detail${i}" rows="3" placeholder="Contoh:\nKuota Utama: 10GB\nMasa Aktif: 30 Hari"></textarea>
+        <label>Link Pembelian (WhatsApp/dll):</label>
+        <input type="text" name="link${i}" placeholder="https://wa.me/..." />
+      `;
+      boxContainer.appendChild(box);
+    }
+
+    function attachStatusBtnListeners() {
+      document.querySelectorAll('.status-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = parseInt(btn.dataset.index);
+          let newStatus;
+
+          if (btn.textContent === "Tersedia") {
+            newStatus = "Kosong";
+            btn.textContent = newStatus;
+            btn.classList.add("kosong");
+          } else {
+            newStatus = "Tersedia";
+            btn.textContent = newStatus;
+            btn.classList.remove("kosong");
+          }
+
+          fetch(scriptUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ index: i, status: newStatus })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (!data.success) alert("Gagal update status.");
+          })
+          .catch(() => alert("Gagal terhubung ke server."));
+        });
+      });
+    }
+
+    attachStatusBtnListeners();
+
+    selectPaket.addEventListener('change', () => {
+      for (let i = 0; i < boxCount; i++) {
+        document.getElementById(`paket${i}`).style.display = 'none';
+      }
+      const selected = selectPaket.value;
+      if (selected !== '') {
+        document.getElementById(`paket${selected}`).style.display = 'block';
+      }
+    });
+
+    // Load Data
+    fetch(scriptUrl)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach((paket, i) => {
+          if (i < boxCount) {
+            document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
+            document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
+            document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
+            document.querySelector(`[name=link${i}]`).value = paket.link || '';
+            const statusBtn = document.querySelector(`.status-btn[data-index="${i}"]`);
+            if (statusBtn) {
+              if (paket.status === "Kosong") {
+                statusBtn.textContent = "Kosong";
+                statusBtn.classList.add("kosong");
+              } else {
+                statusBtn.textContent = "Tersedia";
+                statusBtn.classList.remove("kosong");
+              }
+            }
+          }
+        });
+      })
+      .catch(err => console.error('Gagal load data:', err));
+
+    // Submit
+document.getElementById('formPaket').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const data = [];
+  for (let i = 0; i < boxCount; i++) {
+    const nama = document.querySelector(`[name=nama${i}]`).value.trim();
+    const harga = document.querySelector(`[name=harga${i}]`).value.trim();
+    const detail = document.querySelector(`[name=detail${i}]`).value.trim().split('\n').filter(x => x);
+    const link = document.querySelector(`[name=link${i}]`).value.trim();
+    const statusBtn = document.querySelector(`.status-btn[data-index="${i}"]`);
+    const status = statusBtn && (statusBtn.textContent || "").trim() || "Tersedia";
+
+    if (nama !== '') {
+      data.push({ nama, harga, detail, link, status });
+    }
+  }
+
+  fetch(scriptUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.text())
+  .then(msg => alert(msg))
+  .catch(err => alert('Gagal simpan: ' + err));
+});
+
+
+
+    // Maintenance
+    function setMaintenance(active) {
+      const status = active ? "maintenance" : "normal";
+      fetch(scriptUrl, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("✅ Status: " + data.status);
+      })
+      .catch(err => {
+        alert("❌ Gagal:\n" + err);
+      });
+    }
+  </script>
+</body>
+</html>
