@@ -12,21 +12,25 @@
       background: #f4f6f9;
       margin: 0;
     }
+
     h2 {
       text-align: center;
       color: #2c3e50;
       margin-bottom: 20px;
     }
+
     .paket-select {
       margin: 0 auto 30px;
       text-align: center;
     }
+
     select {
       font-size: 16px;
       padding: 8px 12px;
       border-radius: 8px;
       border: 1px solid #ccc;
     }
+
     .paket-form {
       background: #fff;
       border-radius: 10px;
@@ -35,12 +39,15 @@
       margin-bottom: 20px;
       display: none;
     }
+
     label {
       display: block;
       margin-top: 10px;
       font-weight: bold;
     }
-    input[type="text"], textarea {
+
+    input[type="text"],
+    textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
@@ -48,9 +55,11 @@
       margin-top: 5px;
       font-size: 14px;
     }
+
     textarea {
       resize: vertical;
     }
+
     button {
       background-color: #4b6cb7;
       color: #fff;
@@ -59,35 +68,32 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
-      margin: 20px auto;
       display: block;
-      transition: 0.3s;
+      margin: 30px auto 0;
     }
+
     button:hover {
       background-color: #3a549d;
-    }
-    #toggleMaintenance.active {
-      background-color: #27ae60;
     }
   </style>
 </head>
 <body>
+
   <h2>Panel Admin - AUZAN STORE</h2>
+
   <div class="paket-select">
     <label for="selectPaket">Pilih Paket:</label>
     <select id="selectPaket">
       <option value="">-- Pilih Paket --</option>
     </select>
   </div>
+
   <form id="formPaket">
     <div id="boxContainer"></div>
     <button type="submit">💾 Simpan Semua Paket</button>
   </form>
 
-  <button id="toggleMaintenance">🔧 Aktifkan Maintenance</button>
-
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwC_ArGcfNNIp1jlE-jdU7GOVfFz7EoWmqG255UJ2lNQ2l4SD3qwAOEXZjGfLKjI13H/exec";
     const boxCount = 8;
     const boxContainer = document.getElementById('boxContainer');
     const selectPaket = document.getElementById('selectPaket');
@@ -126,21 +132,6 @@
       }
     });
 
-    // Load data dari Sheet
-    fetch(scriptURL)
-      .then(res => res.json())
-      .then(data => {
-        data.forEach((paket, i) => {
-          if (i < boxCount) {
-            document.querySelector(`[name=nama${i}]`).value = paket.nama || '';
-            document.querySelector(`[name=harga${i}]`).value = paket.harga || '';
-            document.querySelector(`[name=detail${i}]`).value = (paket.detail || []).join('\n');
-            document.querySelector(`[name=link${i}]`).value = paket.link || '';
-          }
-        });
-      });
-
-    // Simpan data ke Sheet
     document.getElementById('formPaket').addEventListener('submit', function (e) {
       e.preventDefault();
       const data = [];
@@ -153,8 +144,12 @@
           data.push({ nama, harga, detail, link });
         }
       }
-      if (data.length === 0) return alert("Isi minimal 1 paket sebelum menyimpan.");
-      
+
+      if (data.length === 0) {
+        alert("Isi minimal 1 paket sebelum menyimpan.");
+        return;
+      }
+
       fetch('/api/simpan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -171,43 +166,5 @@
     });
   </script>
 
-
-    // Toggle Maintenance
-    const maintenanceBtn = document.getElementById('toggleMaintenance');
-    let statusNow = 'normal';
-
-    // Cek status awal
-    fetch(`${scriptURL}?mode=status`)
-      .then(res => res.text())
-      .then(status => {
-        statusNow = status;
-        updateMaintenanceButton(statusNow);
-      });
-
-    maintenanceBtn.addEventListener('click', () => {
-      const newStatus = statusNow === 'maintenance' ? 'normal' : 'maintenance';
-      fetch(`${scriptURL}?mode=update`, {
-        method: 'POST',
-        body: newStatus
-      })
-      .then(res => res.text())
-      .then(msg => {
-        statusNow = newStatus;
-        updateMaintenanceButton(statusNow);
-        alert(msg);
-      })
-      .catch(() => alert('❌ Gagal mengubah status maintenance'));
-    });
-
-    function updateMaintenanceButton(status) {
-      if (status === 'maintenance') {
-        maintenanceBtn.classList.add('active');
-        maintenanceBtn.textContent = '🛠️ Maintenance Sedang Aktif';
-      } else {
-        maintenanceBtn.classList.remove('active');
-        maintenanceBtn.textContent = '🔧 Aktifkan Maintenance';
-      }
-    }
-  </script>
 </body>
 </html>
