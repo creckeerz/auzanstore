@@ -208,11 +208,10 @@ document.getElementById('formPaket').addEventListener('submit', function (e) {
     const detail = document.querySelector(`[name=detail${i}]`).value.trim().split('\n').filter(x => x);
     const link = document.querySelector(`[name=link${i}]`).value.trim();
     const statusBtn = document.querySelector(`.status-btn[data-index="${i}"]`);
-const status = statusBtn && (statusBtn.textContent || "").trim() || "Tersedia";
-
+    const status = statusBtn && (statusBtn.textContent || "").trim() || "Tersedia";
 
     if (nama !== '') {
-      data.push({ nama, harga, detail, link, status }); // ✅ pastikan `status` dikirim
+      data.push({ nama, harga, detail, link, status });
     }
   }
 
@@ -225,6 +224,7 @@ const status = statusBtn && (statusBtn.textContent || "").trim() || "Tersedia";
   .then(msg => alert(msg))
   .catch(err => alert('Gagal simpan: ' + err));
 });
+
 
 
     // Maintenance
