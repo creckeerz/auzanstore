@@ -199,34 +199,31 @@
       .catch(err => console.error('Gagal load data:', err));
 
     // Submit
-    document.getElementById('formPaket').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const data = [];
-      for (let i = 0; i < boxCount; i++) {
-        const nama = document.querySelector(`[name=nama${i}]`).value.trim();
-        const harga = document.querySelector(`[name=harga${i}]`).value.trim();
-        const detail = document.querySelector(`[name=detail${i}]`).value.trim().split('\n').filter(x => x);
-        const link = document.querySelector(`[name=link${i}]`).value.trim();
-        const status = document.querySelector(`.status-btn[data-index="${i}"]`).textContent;
-        if (nama !== '') {
-          data.push({ nama, harga, detail, link, status });
-        }
-      }
+document.getElementById('formPaket').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const data = [];
+  for (let i = 0; i < boxCount; i++) {
+    const nama = document.querySelector(`[name=nama${i}]`).value.trim();
+    const harga = document.querySelector(`[name=harga${i}]`).value.trim();
+    const detail = document.querySelector(`[name=detail${i}]`).value.trim().split('\n').filter(x => x);
+    const link = document.querySelector(`[name=link${i}]`).value.trim();
+    const status = document.querySelector(`.status-btn[data-index="${i}"]`)?.textContent?.trim() || "Tersedia"; // ✅ FIX
 
-      if (data.length === 0) {
-        alert("Isi minimal 1 paket.");
-        return;
-      }
+    if (nama !== '') {
+      data.push({ nama, harga, detail, link, status }); // ✅ pastikan `status` dikirim
+    }
+  }
 
-      fetch(scriptUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.text())
-      .then(msg => alert(msg))
-      .catch(err => alert('Gagal simpan: ' + err));
-    });
+  fetch(scriptUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.text())
+  .then(msg => alert(msg))
+  .catch(err => alert('Gagal simpan: ' + err));
+});
+
 
     // Maintenance
     function setMaintenance(active) {
