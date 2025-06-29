@@ -113,8 +113,10 @@
 
   <section id="testimoni">
     <div class="slider">
-      <div class="slides" id="slides"></div>
-      <div class="nav">
+      <div class="slides" id="slides">
+        <p>Memuat testimoni...</p>
+      </div>
+      <div class="nav" style="display: none;">
         <button onclick="prevSlide()">❮</button>
         <button onclick="nextSlide()">❯</button>
       </div>
@@ -127,35 +129,48 @@
   </footer>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbx-713G3J1rGTcUKXn5y8-03ysZYRqW8S5CRH3y41NBo3k4TF5VXJ8zZFXgDTn9Jqeb/exec?testimoni=true";
-
-    fetch(API_URL)
-      .then(res => res.json())
-      .then(data => {
-        const slidesContainer = document.getElementById("slides");
-        const dotsContainer = document.getElementById("dots");
-
-        if (!data.images || data.images.length === 0) {
-          slidesContainer.innerHTML = "<p>Belum ada testimoni tersedia.</p>";
-          return;
-        }
-
-        data.images.forEach((url, index) => {
-          const img = document.createElement("img");
-          img.src = url;
-          img.alt = "Testimoni " + (index + 1);
-          slidesContainer.appendChild(img);
-
-          const dot = document.createElement("span");
-          dot.className = "dot";
-          dot.onclick = () => showSlide(index);
-          dotsContainer.appendChild(dot);
-        });
-
-        showSlide(0);
-      });
+    const slidesContainer = document.getElementById("slides");
+    const dotsContainer = document.getElementById("dots");
+    const navContainer = document.querySelector(".nav");
 
     let currentIndex = 0;
+    let autoSlideInterval;
+
+    // Contoh data dummy agar kamu bisa pastikan slider berjalan
+    const data = {
+      images: [
+        "https://storage.googleapis.com/support-forums-api/attachment/thread-234014302-5798514929164077605.jpg",
+        "https://storage.googleapis.com/support-forums-api/attachment/thread-137261969-7862752014207926336.png",
+        "https://storage.googleapis.com/support-forums-api/attachment/thread-234014302-5798514929164077605.jpg"
+      ]
+    };
+
+    slidesContainer.innerHTML = "";
+    dotsContainer.innerHTML = "";
+
+    if (!data.images || data.images.length === 0) {
+      slidesContainer.innerHTML = "<p>Belum ada testimoni tersedia.</p>";
+    } else {
+      data.images.forEach((url, index) => {
+        const img = document.createElement("img");
+        img.src = url;
+        img.alt = "Testimoni " + (index + 1);
+        slidesContainer.appendChild(img);
+
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        dot.onclick = () => {
+          showSlide(index);
+          resetAutoSlide();
+        };
+        dotsContainer.appendChild(dot);
+      });
+
+      navContainer.style.display = "block";
+      showSlide(0);
+      startAutoSlide();
+    }
+
     function showSlide(index) {
       const slides = document.querySelectorAll("#slides img");
       const dots = document.querySelectorAll(".dot");
@@ -180,6 +195,22 @@
       const total = document.querySelectorAll("#slides img").length;
       showSlide((currentIndex - 1 + total) % total);
     }
+
+    function startAutoSlide() {
+      autoSlideInterval = setInterval(() => {
+        nextSlide();
+      }, 5000);
+    }
+
+    function resetAutoSlide() {
+      clearInterval(autoSlideInterval);
+      startAutoSlide();
+    }
+
+    // Penting: agar tombol ❮ ❯ berfungsi
+    window.nextSlide = nextSlide;
+    window.prevSlide = prevSlide;
   </script>
+
 </body>
 </html>
