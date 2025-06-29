@@ -209,6 +209,29 @@
   border-top: 1px solid #eee;
   padding-top: 15px;
 }
+    
+.running-text {
+  background-color: #fff7cc;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.text-content {
+  display: inline-block;
+  padding: 10px 0;
+  color: #d35400;
+  font-weight: bold;
+  font-size: 14px;
+  animation: marquee 15s linear infinite;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+    
   </style>
 </head>
 <body>
@@ -217,6 +240,12 @@
   <h1>📶 AUZAN STORE</h1>
   <p>Pusat Penjualan Kuota Internet XL / AXIS AKRAB • Aman, Cepat & Terpercaya!</p>
 </header>
+
+  <div class="running-text">
+  <div class="text-content">
+    Paket Internet XL / AXIS AKRAB dapat berubah sewaktu-waktu
+  </div>
+</div>
 
 
   <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
