@@ -6,53 +6,6 @@
   <title>Auzan Store - Paket Internet XL / AXIS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-  
-  .testimoni-button {
-  position: fixed;
-  top: 15px;
-  right: 20px;
-  z-index: 1000;
-}
-
-.testimoni-button a {
-  background: #ffffff;
-  color: var(--secondary);
-  padding: 7px 14px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: background 0.3s, color 0.3s;
-}
-
-.testimoni-button a:hover {
-  background: var(--secondary);
-  color: #fff;
-}
-
-
-.whatsapp-float {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 999;
-  background-color: #25d366;
-  border-radius: 50%;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease;
-}
-
-.whatsapp-float:hover {
-  transform: scale(1.1);
-}
-
-.whatsapp-float img {
-  width: 40px;
-  height: 40px;
-}
-    
     :root {
       --primary: #4b6cb7;
       --secondary: #182848;
@@ -156,14 +109,105 @@
       color: #aaa;
       padding: 20px;
     }
+
+    .menu-toggle {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      font-size: 26px;
+      color: var(--secondary);
+      z-index: 1100;
+      cursor: pointer;
+      background: #fff;
+      border-radius: 8px;
+      padding: 5px 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -270px;
+      width: 250px;
+      height: 100%;
+      background-color: #fff;
+      box-shadow: -2px 0 12px rgba(0,0,0,0.2);
+      padding: 20px;
+      z-index: 1099;
+      transition: right 0.3s ease-in-out;
+    }
+
+    .sidebar.open {
+      right: 0;
+    }
+
+    .sidebar h3 {
+      margin-top: 0;
+      color: var(--secondary);
+    }
+
+    .sidebar a {
+      display: block;
+      margin: 15px 0;
+      font-weight: 600;
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    .sidebar a:hover {
+      color: var(--primary);
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 1090;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+      background-color: #25d366;
+      border-radius: 50%;
+      padding: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+    }
+
+    .whatsapp-float img {
+      width: 40px;
+      height: 40px;
+    }
   </style>
 </head>
 <body>
-
   <header>
     <h1>📶 AUZAN STORE</h1>
     <p>Pusat Penjualan Kuota Internet XL / AXIS AKRAB • Aman, Cepat & Terpercaya!</p>
   </header>
+
+  <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+  <div class="sidebar" id="sidebar">
+    <h3>📋 Menu</h3>
+    <a href="index.html" onclick="toggleSidebar()">🏠 Beranda</a>
+    <a href="testimoni.html" onclick="toggleSidebar()">📸 Testimoni Pelanggan</a>
+    <a href="https://wa.me/6283125361094" target="_blank" onclick="toggleSidebar()">💌 Hubungi Admin</a>
+    <a href="https://chat.whatsapp.com/Gyq554Eza647Ydpw5ss32i" target="_blank" onclick="toggleSidebar()">👥 Grup WhatsApp</a>
+  </div>
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
   <div class="paket-container" id="paketContainer">
     <div class="loading">Memuat paket...</div>
@@ -172,119 +216,99 @@
   <footer>
     &copy; 2025 Auzan Store. Powered by XL / AXIS AKRAB.
   </footer>
-<script>
-function formatRupiah(angka) {
-  const num = parseInt(angka.toString().replace(/[^\d]/g, '')); // bersihkan
-  if (isNaN(num)) return angka; // fallback jika bukan angka
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-</script>
-  
-<script>
-  function generatePesan(paket) {
-  const detailText = paket.detail.map(line => `- ${line}`).join('\n');
-  const pesan = 
-`Halo Admin Auzan Store,
-Saya ingin beli paket berikut:
 
-📦 Nama: ${paket.nama}
-💰 Harga: Rp ${formatRupiah(paket.harga)}
-📄 Detail:
-${detailText}
-
-Mohon diproses ya.`;
-  return encodeURIComponent(pesan);
-}
-
-</script>
+  <a href="https://chat.whatsapp.com/Gyq554Eza647Ydpw5ss32i" class="whatsapp-float" target="_blank" aria-label="Gabung Grup WhatsApp">
+    <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" />
+  </a>
 
   <script>
-   fetch('/api/data')
-  .then(res => res.text()) // Ambil sebagai teks mentah dulu
-  .then(text => {
-    let data;
-    try {
-      data = JSON.parse(text); // Coba parse JSON
-    } catch (e) {
-      console.error("❌ Gagal parse JSON:", e, text);
-      document.getElementById('paketContainer').innerHTML =
-        '<p class="loading">Gagal memuat data paket.</p>';
-      return;
+    function formatRupiah(angka) {
+      const num = parseInt(angka.toString().replace(/[^\d]/g, ''));
+      if (isNaN(num)) return angka;
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
-    const container = document.getElementById('paketContainer');
-    container.innerHTML = ''; // Hapus loading
+    function generatePesan(paket) {
+      const detailText = paket.detail.map(line => `- ${line}`).join('\n');
+      const pesan = `Halo Admin Auzan Store,\nSaya ingin beli paket berikut:\n\n📦 Nama: ${paket.nama}\n💰 Harga: Rp ${formatRupiah(paket.harga)}\n📄 Detail:\n${detailText}\n\nMohon diproses ya.`;
+      return encodeURIComponent(pesan);
+    }
 
-    data.forEach(paket => {
-      const card = document.createElement('div');
-      card.className = 'paket-card';
-
-      // Pastikan detail adalah array
-      const details = Array.isArray(paket.detail) ? paket.detail : [];
-
-      const detailHTML = details
-        .map(line => `<div class="paket-detail">• ${line}</div>`)
-        .join('');
-
-      card.innerHTML = `
-        <div>
-          <div class="paket-title">${paket.nama}</div>
-          <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
-          ${detailHTML}
-        </div>
-        <div class="paket-detail" style="font-weight:bold; color: ${paket.status === 'tersedia' ? '#27ae60' : 'red'};">
-          Status: ${paket.status === 'tersedia' ? 'Tersedia' : 'Kosong'}
-        </div>
-        ${
-          paket.status === 'tersedia'
-            ? `<div class="paket-link">
-                 <a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">Beli Sekarang</a>
-               </div>`
-            : `<div class="paket-link">
-                 <a style="background-color:#ccc; cursor:not-allowed;" onclick="return false">Tidak Tersedia</a>
-               </div>`
+    fetch('/api/data')
+      .then(res => res.text())
+      .then(text => {
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          console.error("Gagal parse JSON:", e, text);
+          document.getElementById('paketContainer').innerHTML = '<p class="loading">Gagal memuat data paket.</p>';
+          return;
         }
-      `;
 
-      container.appendChild(card);
-    });
-  })
-  .catch(err => {
-    console.error('❌ Gagal fetch /api/data:', err);
-    document.getElementById('paketContainer').innerHTML =
-      '<p class="loading">Gagal memuat data dari server.</p>';
-  });
+        const container = document.getElementById('paketContainer');
+        container.innerHTML = '';
 
-  </script>
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    fetch('https://script.google.com/macros/s/AKfycbwcH3MsaF5T2K8X5hsuPsx3ZJoP_FKOcmC8TO-whJuUfwa6PHFB3wPXsokRR6XV13Gm/exec?maintenance=true')
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === "maintenance") {
-          document.body.innerHTML = `
-            <div style="display:flex;justify-content:center;align-items:center;height:100vh;text-align:center;font-family:sans-serif;">
-              <div>
-                <h1>🚧 Website Sedang Dalam Perbaikan</h1>
-                <p>Mohon maaf atas ketidaknyamanannya.<br>Silakan kembali lagi nanti.</p>
-              </div>
+        data.forEach(paket => {
+          const card = document.createElement('div');
+          card.className = 'paket-card';
+          const details = Array.isArray(paket.detail) ? paket.detail : [];
+          const detailHTML = details.map(line => `<div class="paket-detail">• ${line}</div>`).join('');
+
+          card.innerHTML = `
+            <div>
+              <div class="paket-title">${paket.nama}</div>
+              <div class="paket-harga">Rp ${formatRupiah(paket.harga)}</div>
+              ${detailHTML}
             </div>
+            <div class="paket-detail" style="font-weight:bold; color: ${paket.status === 'tersedia' ? '#27ae60' : 'red'};">
+              Status: ${paket.status === 'tersedia' ? 'Tersedia' : 'Kosong'}
+            </div>
+            ${paket.status === 'tersedia' ?
+              `<div class="paket-link"><a href="https://wa.me/6283125361094?text=${generatePesan(paket)}" target="_blank">Beli Sekarang</a></div>` :
+              `<div class="paket-link"><a style="background-color:#ccc; cursor:not-allowed;" onclick="return false">Tidak Tersedia</a></div>`
+            }
           `;
-        }
+
+          container.appendChild(card);
+        });
       })
-      .catch(console.error);
-  });
-</script>
-<!-- Tombol WhatsApp Mengambang -->
-<a href="https://chat.whatsapp.com/Gyq554Eza647Ydpw5ss32i" 
-   class="whatsapp-float" target="_blank" aria-label="Gabung Grup WhatsApp">
-  <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp" />
-</a>
+      .catch(err => {
+        console.error('Gagal fetch /api/data:', err);
+        document.getElementById('paketContainer').innerHTML = '<p class="loading">Gagal memuat data dari server.</p>';
+      });
 
-<!-- Tombol Testimoni di pojok kanan atas -->
-<div class="testimoni-button">
-  <a href="testimoni.html">Testimoni Pelanggan</a>
-</div>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const isOpen = sidebar.classList.contains("open");
 
+      if (isOpen) {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("show");
+      } else {
+        sidebar.classList.add("open");
+        overlay.classList.add("show");
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch('https://script.google.com/macros/s/AKfycbwcH3MsaF5T2K8X5hsuPsx3ZJoP_FKOcmC8TO-whJuUfwa6PHFB3wPXsokRR6XV13Gm/exec?maintenance=true')
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "maintenance") {
+            document.body.innerHTML = `
+              <div style="display:flex;justify-content:center;align-items:center;height:100vh;text-align:center;font-family:sans-serif;">
+                <div>
+                  <h1>🚧 Website Sedang Dalam Perbaikan</h1>
+                  <p>Mohon maaf atas ketidaknyamanannya.<br>Silakan kembali lagi nanti.</p>
+                </div>
+              </div>
+            `;
+          }
+        })
+        .catch(console.error);
+    });
+  </script>
 </body>
 </html>
